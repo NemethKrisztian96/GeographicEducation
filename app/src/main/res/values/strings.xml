@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Geographic Education</string>
+    <string name="string_study">Study</string>
+    <string name="string_play">Play</string>
+    <string name="string_statistics">Statistics</string>
+    <string name="string_geographic_education">Geographic Education</string>
+    <string name="string_what_would_you_like_to_do">What would you like to do?</string>
+    <string name="string_welcome_to">Welcome to</string>
+    <string name="string_please_select_a_region">Please select a region:</string>
+    <string name="country_flag">Country flag</string>
+    <string name="countries_in_region">Countries in %1$s</string>
+    <string name="country_and_alpha_code">%1$s (%2$s)</string>
+</resources>
