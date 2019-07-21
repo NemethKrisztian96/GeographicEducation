@@ -10,13 +10,4 @@ class CountryCurrency(code: String, name: String) {
     @SerializedName("name")
     var mName = name
 
-
-    fun getTransformedCurrency(): String {
-        //get exchange rates
-
-        //transform to proper rate
-
-
-        return "www" //TODO
-    }
 }

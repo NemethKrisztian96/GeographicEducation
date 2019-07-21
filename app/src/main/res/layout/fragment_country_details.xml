@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <include
+            layout="@layout/toolbar_main"
+            android:id="@+id/toolbar_local"/>
+
+    <!--name-->
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/country_name"
+            android:textColor="@color/design_default_color_primary"
+            android:textSize="22sp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_local"/>
+
+    <!--alpha2code-->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/country_alpha2code"
+            android:text="@string/alpha2code"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@+id/country_name"
+            android:layout_marginStart="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/country_capital"
+            app:layout_constraintEnd_toStartOf="@+id/country_flag"/>
+
+    <!--capital-->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/country_capital"
+            android:text="@string/country_capital"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@+id/country_alpha2code"
+            android:layout_marginStart="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/country_population"
+            app:layout_constraintEnd_toStartOf="@+id/country_flag"/>
+
+    <!--population-->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/country_population"
+            android:text="@string/country_population"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@+id/country_capital"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/country_area"
+            app:layout_constraintEnd_toStartOf="@+id/country_flag"/>
+
+    <!--area-->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/country_area"
+            android:text="@string/country_area"
+            android:textSize="16sp"
+            android:layout_marginStart="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/country_population"
+            android:layout_marginTop="12dp"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintBottom_toTopOf="@+id/country_local_time"
+            app:layout_constraintEnd_toStartOf="@+id/country_flag"/>
+
+    <!--flag-->
+    <ImageView
+            android:id="@+id/country_flag"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:contentDescription="@string/country_flag"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/country_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/background"/>
+
+    <!--country's local time-->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/country_local_time"
+            android:text="@string/country_local_time"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@+id/country_area"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="12dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/country_currency_exchange"
+            app:layout_constraintEnd_toStartOf="@+id/country_flag"/>
+
+    <android.widget.TextClock
+            android:id="@+id/country_local_time_text_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format24Hour="k:mm:ss"
+            android:format12Hour="@null"
+            android:textColor="@color/design_default_color_primary"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/country_local_time"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@+id/country_local_time"
+            app:layout_constraintBottom_toBottomOf="@+id/country_local_time"/>
+
+    <!--currency exchange value-->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/country_currency_exchange"
+            android:text="@string/country_currency_value"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@+id/country_local_time"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/country_neighbors_label"
+            app:layout_constraintEnd_toStartOf="@+id/country_flag"/>
+
+    <!--list of neighbors-->
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/country_neighbors_label"
+            android:text="@string/country_neighbors"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@+id/country_currency_exchange"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            />
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/neighbors_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/country_neighbors_label"
+            app:layout_constraintVertical_bias="0.01"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

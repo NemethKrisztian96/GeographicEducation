@@ -1,7 +1,7 @@
 package com.example.krs.geographiceducation.model
 
 import android.util.Log
-import com.example.krs.geographiceducation.UtilsAndHelpers
+import com.example.krs.geographiceducation.logic.UtilsAndHelpers
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,7 +33,7 @@ class Country(
     var mArea: Double = area
 
     @SerializedName("timezones")
-    private var mCountryTimeZones: Array<String> = timezones
+    var mCountryTimeZones: Array<String> = timezones
 
     @SerializedName("alpha3Code")
     var mAlpha3code: String = alpha3code
@@ -42,12 +42,12 @@ class Country(
     private var mBorders: Array<String> = borders
 
     @SerializedName("currencies")
-    private var mCurrencies: Array<CountryCurrency> = currencies
+    var mCurrencies: Array<CountryCurrency> = currencies
 
     var mLocalTime: String = getLocalTime(0)
     var mNeighbors: List<Country> = listOf()
 
-    var mCurrencyValue: String = "" // “1 EUR=4.78 RON”
+    var mCurrencyValue: String = "unavailable" // “1 EUR=4.78 RON”
 
     init {
         Log.i("Country", "Init")
@@ -79,12 +79,12 @@ class Country(
 
     private fun getCurrencyFromCurrencyList(currencies: Array<CountryCurrency>): String {
         for (i in 0 until currencies.size) {
-            var cur = currencies[i].getTransformedCurrency()
-            if (cur.isNotEmpty()) {
+            var cur = UtilsAndHelpers.getTransformedCurrency(currencies[i])
+            if (cur != null && cur.isNotEmpty()) {
                 return cur
             }
         }
-        return ""
+        return "unavailable"
     }
 
     override fun equals(other: Any?): Boolean {
