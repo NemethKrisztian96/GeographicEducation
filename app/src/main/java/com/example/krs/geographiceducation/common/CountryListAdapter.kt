@@ -1,4 +1,4 @@
-package com.example.krs.geographiceducation.study
+package com.example.krs.geographiceducation.common
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,15 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.krs.geographiceducation.R
-import com.example.krs.geographiceducation.logic.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
+import com.example.krs.geographiceducation.study.StudyActivity
 import kotlinx.android.synthetic.main.country_list_item.view.*
 
 
 class CountryListAdapter(activity: Context, clickListener: (Country) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val mActivity = activity
-    var mCountries: List<Country> = arrayListOf()
+    var mCountries: MutableList<Country> = arrayListOf()
     val mClickListener = clickListener
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

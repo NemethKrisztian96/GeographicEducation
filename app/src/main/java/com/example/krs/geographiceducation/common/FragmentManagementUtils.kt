@@ -1,4 +1,4 @@
-package com.example.krs.geographiceducation.logic
+package com.example.krs.geographiceducation.common
 
 import android.app.Activity
 import androidx.fragment.app.Fragment

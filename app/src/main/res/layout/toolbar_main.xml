@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.appbar.MaterialToolbar
-        android:theme="@style/Widget.MaterialComponents.ActionBar.Primary"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:theme="@style/Widget.MaterialComponents.ActionBar.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/design_default_color_primary_dark">
+        android:background="@color/design_default_color_primary">
 
     <!--<ImageButton
             android:layout_width="wrap_content"

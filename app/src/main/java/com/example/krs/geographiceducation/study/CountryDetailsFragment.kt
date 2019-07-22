@@ -17,7 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.krs.geographiceducation.R
 import com.example.krs.geographiceducation.R.*
-import com.example.krs.geographiceducation.logic.UtilsAndHelpers
+import com.example.krs.geographiceducation.common.CountryListAdapter
+import com.example.krs.geographiceducation.common.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
 import kotlinx.android.synthetic.main.fragment_country_details.view.*
 
@@ -33,7 +34,7 @@ class CountryDetailsFragment(country: Country) : Fragment() {
         const val FLAG_SIZE = 64 //this is the max size
 
         fun newInstance(country: Country): CountryDetailsFragment {
-            country.initializeMembers()
+            country.initializeMembersFromExistingRecyclerViewAdapter()
             return CountryDetailsFragment(country)
         }
     }
@@ -102,7 +103,7 @@ class CountryDetailsFragment(country: Country) : Fragment() {
                         country
                     )
                 }
-            adapter.mCountries = mCountry.mNeighbors
+            adapter.mCountries = mCountry.mNeighbors.toMutableList()
             adapter.notifyDataSetChanged()
             recyclerView.adapter = adapter
         } else {

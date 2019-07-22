@@ -1,7 +1,7 @@
 package com.example.krs.geographiceducation.model
 
 import android.util.Log
-import com.example.krs.geographiceducation.logic.UtilsAndHelpers
+import com.example.krs.geographiceducation.common.UtilsAndHelpers
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.*
@@ -51,12 +51,18 @@ class Country(
 
     init {
         Log.i("Country", "Init")
-        initializeMembers()
+        initializeMembersFromExistingRecyclerViewAdapter()
     }
 
-    fun initializeMembers() {
+    fun initializeMembersFromExistingRecyclerViewAdapter() {
         mLocalTime = getLocalTime(0)
         mNeighbors = getNeighboursFromBordersList(mBorders)
+        mCurrencyValue = getCurrencyFromCurrencyList(mCurrencies)
+    }
+
+    fun initializeMembersFromCountryList(countries: List<Country>) {
+        mLocalTime = getLocalTime(0)
+        mNeighbors = getNeighboursFromBordersList(mBorders, countries)
         mCurrencyValue = getCurrencyFromCurrencyList(mCurrencies)
     }
 
@@ -77,9 +83,16 @@ class Country(
         return listOf()
     }
 
+    private fun getNeighboursFromBordersList(borders: Array<String>, countries: List<Country>): List<Country> {
+        if (borders.isNotEmpty()) {
+            return UtilsAndHelpers.getNeighborsFromBorders(borders, countries)
+        }
+        return listOf()
+    }
+
     private fun getCurrencyFromCurrencyList(currencies: Array<CountryCurrency>): String {
         for (i in 0 until currencies.size) {
-            var cur = UtilsAndHelpers.getTransformedCurrency(currencies[i])
+            val cur = UtilsAndHelpers.getTransformedCurrency(currencies[i])
             if (cur != null && cur.isNotEmpty()) {
                 return cur
             }

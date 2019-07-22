@@ -2,8 +2,6 @@ package com.example.krs.geographiceducation.study
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,15 +9,15 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.krs.geographiceducation.R
-import com.example.krs.geographiceducation.logic.NavigationHelpers
-import com.example.krs.geographiceducation.logic.UtilsAndHelpers
+import com.example.krs.geographiceducation.common.NavigationHelpers
+import com.example.krs.geographiceducation.common.RegionListView
+import com.example.krs.geographiceducation.common.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
 import com.example.krs.geographiceducation.model.ExchangeRate
 import java.util.*
 
 class StudyActivity : AppCompatActivity() {
     private lateinit var regionListView: ListView
-    private val REGIONS: Array<String> = arrayOf("Africa", "Americas", "Asia", "Europe", "Oceania")
     private var mOpenFragments: MutableList<Fragment> = mutableListOf()
 
     companion object {
@@ -50,20 +48,10 @@ class StudyActivity : AppCompatActivity() {
             NavigationHelpers.navigationOnClickListener(this, mOpenFragments, supportFragmentManager)
         }
 
-
-        //creating and populating regionListView and it's adapter
-        regionListView = findViewById(R.id.region_list_view)
-        val regionAdapter = ArrayAdapter<String>(this, R.layout.region_list_item, REGIONS)
-        //using a built-in list item xml
-        //val regionAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, REGIONS)
-
-        regionListView.adapter = regionAdapter
-        regionListView.setOnItemClickListener { parent, view, position, id ->
-            if (view is TextView) {
-                Log.i(TAG, "Click!")
-                selectedRegionClick(view)
-            }
-        }
+        RegionListView.bind(
+            this,
+            R.id.region_list_view
+        ) { parent, view, position, id -> selectedRegionClick(view as TextView) }
 
         //get exchange rates
         val localCountry = Locale.getDefault().isO3Country

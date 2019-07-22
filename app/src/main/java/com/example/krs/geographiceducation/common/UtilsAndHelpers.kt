@@ -1,10 +1,13 @@
-package com.example.krs.geographiceducation.logic
+package com.example.krs.geographiceducation.common
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
@@ -14,8 +17,11 @@ import com.example.krs.geographiceducation.logic.Retrofit.RetrofitExchangeRateSe
 import com.example.krs.geographiceducation.model.Country
 import com.example.krs.geographiceducation.model.CountryCurrency
 import com.example.krs.geographiceducation.model.ExchangeRate
-import com.example.krs.geographiceducation.study.CountryListAdapter
+import com.example.krs.geographiceducation.play.GuessCapitalFragment
+import com.example.krs.geographiceducation.play.PlayActivity
+import com.example.krs.geographiceducation.study.CountryListFragment
 import com.example.krs.geographiceducation.study.StudyActivity
+import kotlinx.android.synthetic.main.fragment_country_list.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,6 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class UtilsAndHelpers {
     companion object {
         const val TAG = "HELPER"
+        const val REST_COUNTRIES_BASE_URL = "https://restcountries.eu/rest/v2/"
         lateinit var countryListRecyclerViewAdapter: CountryListAdapter
         var localCurrency: String? = null
         var exchangeRates: ExchangeRate? = null
@@ -44,7 +51,10 @@ class UtilsAndHelpers {
             return RequestOptions()
                 .placeholder(R.drawable.flag_placeholder)
                 .error(R.drawable.flag_not_available)
-                .override(SMALL_IMG_WIDTH, SMALL_IMG_WIDTH)
+                .override(
+                    SMALL_IMG_WIDTH,
+                    SMALL_IMG_WIDTH
+                )
                 .centerCrop()
                 .priority(Priority.HIGH)
         }
@@ -53,7 +63,10 @@ class UtilsAndHelpers {
             return RequestOptions()
                 .placeholder(R.drawable.flag_placeholder)
                 .error(R.drawable.flag_not_available)
-                .override(BIG_IMG_WIDTH, BIG_IMG_WIDTH)
+                .override(
+                    BIG_IMG_WIDTH,
+                    BIG_IMG_WIDTH
+                )
                 .centerCrop()
                 .priority(Priority.HIGH)
         }
@@ -65,6 +78,15 @@ class UtilsAndHelpers {
          */
         fun getNeighborsFromBorders(borders: Array<String>): List<Country> {
             return countryListRecyclerViewAdapter.mCountries.filter { c ->
+                arrayContainsString(
+                    borders,
+                    c.mAlpha3code
+                )
+            }
+        }
+
+        fun getNeighborsFromBorders(borders: Array<String>, countries: List<Country>): List<Country> {
+            return countries.filter { c ->
                 arrayContainsString(
                     borders,
                     c.mAlpha3code
@@ -89,7 +111,7 @@ class UtilsAndHelpers {
             //getting currencies used in country
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(StudyActivity.BASE_URL)  //parent.REGION_URL + selected_region + parent.FILTER_FOR_REGION_URL
+                .baseUrl(REST_COUNTRIES_BASE_URL)  //parent.REGION_URL + selected_region + parent.FILTER_FOR_REGION_URL
                 .build()
             val service = retrofit.create(RetrofitCountryService::class.java)
             val countryAssets = service.getCountriesAndCurrencies()
@@ -145,6 +167,47 @@ class UtilsAndHelpers {
             return activeNetwork?.isConnected == true
         }
 
+        fun getCountriesDataWithRetrofit(
+            context: Context,
+            regionName: String,
+            countries: MutableList<Country>,
+            adapter: CountryListAdapter? = null,
+            //progressBar: ProgressBar? = null,
+            //errorImage: ImageView? = null
+            fragment: Fragment? = null,
+            activity: PlayActivity? = null
+        ) {
+            val retrofit = Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(StudyActivity.BASE_URL)  //fragment.REGION_URL + selected_region + fragment.FILTER_FOR_REGION_URL
+                .build()
+            val service = retrofit.create(RetrofitCountryService::class.java)
+            val countryAssets = service.getDetailedCountries(regionName)
+            countryAssets.enqueue(object : Callback<MutableList<Country>> {
+                override fun onResponse(call: Call<MutableList<Country>>, response: Response<MutableList<Country>>) {
+                    Log.i(CountryListFragment.TAG, "Call: success.")
+                    val countryAssetsData = response.body()
+                    if (countryAssetsData != null) {
+                        countries.addAll(countryAssetsData)
+                        adapter?.notifyDataSetChanged()
+                        if (fragment is GuessCapitalFragment) {
+                            activity?.openFragment(fragment)
+                        } else {
+                            fragment?.loading_progress_bar?.visibility = View.GONE
+                        }
+                        activity?.loading_progress_bar?.visibility = View.GONE
+                    }
+                }
 
+                override fun onFailure(call: Call<MutableList<Country>>, t: Throwable) {
+                    Log.e(CountryListFragment.TAG, "Call: returned with failure.")
+                    fragment?.loading_progress_bar?.visibility = View.INVISIBLE
+                    fragment?.error_image?.visibility = View.VISIBLE
+                    activity?.loading_progress_bar?.visibility = View.INVISIBLE
+                    activity?.error_image?.visibility = View.VISIBLE
+                    Toast.makeText(context, "Could not gather data", Toast.LENGTH_LONG).show()
+                }
+            })
+        }
     }
 }

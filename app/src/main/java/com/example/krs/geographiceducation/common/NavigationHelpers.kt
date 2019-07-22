@@ -1,4 +1,4 @@
-package com.example.krs.geographiceducation.logic
+package com.example.krs.geographiceducation.common
 
 import android.app.Activity
 import androidx.fragment.app.Fragment
@@ -14,7 +14,10 @@ class NavigationHelpers {
             if (openFragments.size > 1) {
                 //removing all fragments except the first (which should be CountryListFragment)
                 for (i in 0 until openFragments.size - 1) {
-                    removeLastAddedFragment(openFragments, supportFragmentManager)
+                    removeLastAddedFragment(
+                        openFragments,
+                        supportFragmentManager
+                    )
                 }
             } else {
                 activity.onBackPressed()

@@ -21,4 +21,9 @@
     <string name="error">Error</string>
     <string name="please_check_your_internet_connection">Please check your internet connection</string>
     <string name="reload">Reload</string>
+    <string name="what_would_you_like_to_play">What would you like to play?</string>
+    <string name="guess_capital">Guess the capital</string>
+    <string name="guess_neighbor">Guess the neighbor</string>
+    <string name="guess_flag">Guess the flag</string>
+    <string name="what_is_the_capital_of">What is the capital of</string>
 </resources>

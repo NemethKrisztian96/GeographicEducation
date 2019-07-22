@@ -7,10 +7,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.example.krs.geographiceducation.logic.UtilsAndHelpers
+import com.example.krs.geographiceducation.common.UtilsAndHelpers
 import com.example.krs.geographiceducation.play.PlayActivity
 import com.example.krs.geographiceducation.statistics.StatisticsActivity
 import com.example.krs.geographiceducation.study.StudyActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.no_internet_connection_view.*
 
 /**
@@ -34,6 +35,16 @@ class MainActivity : AppCompatActivity() {
             toolbar.title = TOOLBAR_TITLE
             toolbar.setTitleTextColor(Color.WHITE)
             setSupportActionBar(toolbar)
+
+            study_button.setOnClickListener {
+                studyButtonClick(it)
+            }
+            play_button.setOnClickListener {
+                playButtonClick(it)
+            }
+            statistics_button.setOnClickListener {
+                statisticsButtonClick(it)
+            }
         } else {
             //error message
             setContentView(R.layout.no_internet_connection_view)

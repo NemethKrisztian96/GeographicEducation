@@ -11,7 +11,7 @@ interface RetrofitCountryService {
     fun getBasicCountries(@Path("selected_region") selectedRegion: String): Call<List<Country>>  //only gets the required fields for the list of countries
 
     @GET("region/{selected_region}")
-    fun getDetailedCountries(@Path("selected_region") selectedRegion: String): Call<List<Country>>
+    fun getDetailedCountries(@Path("selected_region") selectedRegion: String): Call<MutableList<Country>>
 
     @GET("all?fields=alpha3Code;currencies")
     fun getCountriesAndCurrencies(): Call<List<Country>>
