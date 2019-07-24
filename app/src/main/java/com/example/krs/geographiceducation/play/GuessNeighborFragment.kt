@@ -25,18 +25,17 @@ import kotlinx.android.synthetic.main.fragment_guess_the_capital.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
+class GuessNeighborFragment(gameLogic: GameLogic) : GuessGameFragment() {
     private lateinit var mRegion: String
     private lateinit var mParent: PlayActivity
     private var mGameLogic: GameLogic = gameLogic
 
     companion object {
-        const val TAG = "GuessCapitalFragment"
-        const val GAME_TYPE = "Guess the capital"
+        const val TAG = "GuessNeighborFragment"
+        const val GAME_TYPE = "Guess the neighbor"
 
-        fun newInstance(gameLogic: GameLogic): GuessCapitalFragment {
-            return GuessCapitalFragment(gameLogic)
+        fun newInstance(gameLogic: GameLogic): GuessNeighborFragment {
+            return GuessNeighborFragment(gameLogic)
         }
     }
 
@@ -54,7 +53,7 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view: View =
-            inflater.inflate(R.layout.fragment_guess_the_capital, container, false)
+            inflater.inflate(R.layout.fragment_guess_the_neighbor, container, false)
         view.setBackgroundColor(ContextCompat.getColor(context!!, R.color.white))
 
         //setting toolbar
@@ -67,7 +66,7 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         toolbar.setTitleTextColor(Color.WHITE)
         toolbar.setNavigationOnClickListener { navigationOnClickListener() }
 
-        val answerOptions = mGameLogic.getGuessCapitalData()
+        val answerOptions = mGameLogic.getGuessNeighborData()
 
         //filling game layout buttons and country name
         view.country_name.text = mGameLogic.mCurrentCountry.mName
@@ -118,7 +117,7 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         button_answer3.isClickable = false
         button_answer4.isClickable = false
 
-        if (mGameLogic.isCorrectCapital(view.text.toString())) {
+        if (mGameLogic.isCorrectNeighbor(view.text.toString())) {
             view.setBackgroundColor(ContextCompat.getColor(context!!, R.color.correct_answer))
         } else {
             view.setBackgroundColor(ContextCompat.getColor(context!!, R.color.incorrect_answer))
@@ -138,7 +137,11 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
                         )
                     )
                 } else {
-                    mParent.openFragment(newInstance(mGameLogic))
+                    mParent.openFragment(
+                        newInstance(
+                            mGameLogic
+                        )
+                    )
                 }
             }
         }

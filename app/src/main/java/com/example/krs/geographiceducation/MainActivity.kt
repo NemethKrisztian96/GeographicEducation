@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.example.krs.geographiceducation.common.UtilsAndHelpers
+import com.example.krs.geographiceducation.model.Country
 import com.example.krs.geographiceducation.play.PlayActivity
 import com.example.krs.geographiceducation.statistics.StatisticsActivity
 import com.example.krs.geographiceducation.study.StudyActivity
@@ -20,6 +21,9 @@ import kotlinx.android.synthetic.main.no_internet_connection_view.*
 class MainActivity : AppCompatActivity() {
     companion object {
         const val TOOLBAR_TITLE: String = "Home"
+        const val TAG: String = "MainActivity"
+
+        var allCountries: MutableList<Country> = mutableListOf()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +49,8 @@ class MainActivity : AppCompatActivity() {
             statistics_button.setOnClickListener {
                 statisticsButtonClick(it)
             }
+
+            UtilsAndHelpers.getAllCountriesDataWithRetrofit(this, allCountries)
         } else {
             //error message
             setContentView(R.layout.no_internet_connection_view)

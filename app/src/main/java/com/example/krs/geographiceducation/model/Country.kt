@@ -1,5 +1,6 @@
 package com.example.krs.geographiceducation.model
 
+import android.annotation.SuppressLint
 import android.util.Log
 import com.example.krs.geographiceducation.common.UtilsAndHelpers
 import com.google.gson.annotations.SerializedName
@@ -66,6 +67,7 @@ class Country(
         mCurrencyValue = getCurrencyFromCurrencyList(mCurrencies)
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun getLocalTime(position: Int): String {
         var time = SimpleDateFormat("HH:mm:ss")
         var index = position
@@ -78,7 +80,7 @@ class Country(
 
     private fun getNeighboursFromBordersList(borders: Array<String>): List<Country> {
         if (borders.isNotEmpty()) {
-            return UtilsAndHelpers.getNeighborsFromBorders(borders)
+            return UtilsAndHelpers.getAllExistingNeighborsFromBorders(borders)
         }
         return listOf()
     }

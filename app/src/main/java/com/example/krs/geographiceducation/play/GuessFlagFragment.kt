@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -20,23 +20,23 @@ import com.example.krs.geographiceducation.model.database.GameResult
 import com.example.krs.geographiceducation.model.database.SQLiteDBHelper
 import com.example.krs.geographiceducation.statistics.GameResultsFragment
 import com.example.krs.geographiceducation.study.StudyActivity
-import kotlinx.android.synthetic.main.fragment_guess_the_capital.*
-import kotlinx.android.synthetic.main.fragment_guess_the_capital.view.*
+import kotlinx.android.synthetic.main.fragment_guess_the_capital.view.country_name
+import kotlinx.android.synthetic.main.fragment_guess_the_flag.*
+import kotlinx.android.synthetic.main.fragment_guess_the_flag.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
+class GuessFlagFragment(gameLogic: GameLogic) : GuessGameFragment() {
     private lateinit var mRegion: String
     private lateinit var mParent: PlayActivity
     private var mGameLogic: GameLogic = gameLogic
 
     companion object {
-        const val TAG = "GuessCapitalFragment"
-        const val GAME_TYPE = "Guess the capital"
+        const val TAG = "GuessFlagFragment"
+        const val GAME_TYPE = "Guess the flag"
 
-        fun newInstance(gameLogic: GameLogic): GuessCapitalFragment {
-            return GuessCapitalFragment(gameLogic)
+        fun newInstance(gameLogic: GameLogic): GuessFlagFragment {
+            return GuessFlagFragment(gameLogic)
         }
     }
 
@@ -54,7 +54,7 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view: View =
-            inflater.inflate(R.layout.fragment_guess_the_capital, container, false)
+            inflater.inflate(R.layout.fragment_guess_the_flag, container, false)
         view.setBackgroundColor(ContextCompat.getColor(context!!, R.color.white))
 
         //setting toolbar
@@ -67,29 +67,56 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         toolbar.setTitleTextColor(Color.WHITE)
         toolbar.setNavigationOnClickListener { navigationOnClickListener() }
 
-        val answerOptions = mGameLogic.getGuessCapitalData()
+        val answerOptions = mGameLogic.getGuessFlagData()
 
-        //filling game layout buttons and country name
+        //filling game layout imageViews and country name
         view.country_name.text = mGameLogic.mCurrentCountry.mName
-        view.button_answer1.text = answerOptions[0]
-        view.button_answer2.text = answerOptions[1]
-        view.button_answer3.text = answerOptions[2]
-        view.button_answer4.text = answerOptions[3]
+        view.image_answer1.contentDescription = answerOptions[0]
+        UtilsAndHelpers.getImageWithGlide(
+            mParent,
+            UtilsAndHelpers.FLAG_BASE_URL + answerOptions[0] + "/flat/64.png",
+            UtilsAndHelpers.getGlideRequestOptionsForBiggerImg(),
+            view.image_answer1
+        )
 
-        view.button_answer1.setOnClickListener {
-            answerButtonClick(it as Button)
+        view.image_answer2.contentDescription = answerOptions[1]
+        UtilsAndHelpers.getImageWithGlide(
+            mParent,
+            UtilsAndHelpers.FLAG_BASE_URL + answerOptions[1] + "/flat/64.png",
+            UtilsAndHelpers.getGlideRequestOptionsForBiggerImg(),
+            view.image_answer2
+        )
+
+        view.image_answer3.contentDescription = answerOptions[2]
+        UtilsAndHelpers.getImageWithGlide(
+            mParent,
+            UtilsAndHelpers.FLAG_BASE_URL + answerOptions[2] + "/flat/64.png",
+            UtilsAndHelpers.getGlideRequestOptionsForBiggerImg(),
+            view.image_answer3
+        )
+
+        view.image_answer4.contentDescription = answerOptions[3]
+        UtilsAndHelpers.getImageWithGlide(
+            mParent,
+            UtilsAndHelpers.FLAG_BASE_URL + answerOptions[3] + "/flat/64.png",
+            UtilsAndHelpers.getGlideRequestOptionsForBiggerImg(),
+            view.image_answer4
+        )
+
+        view.image_answer1.setOnClickListener {
+            answerImageClick(it as ImageView)
         }
 
-        view.button_answer2.setOnClickListener {
-            answerButtonClick(it as Button)
+        view.image_answer2.setOnClickListener {
+            answerImageClick(it as ImageView)
         }
 
-        view.button_answer3.setOnClickListener {
-            answerButtonClick(it as Button)
+        view.image_answer3.setOnClickListener {
+            answerImageClick(it as ImageView)
         }
 
-        view.button_answer4.setOnClickListener {
-            answerButtonClick(it as Button)
+        view.image_answer4.setOnClickListener {
+            answerImageClick(it as ImageView)
         }
 
         return view
@@ -111,14 +138,14 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         }
     }
 
-    private fun answerButtonClick(view: Button) {
+    private fun answerImageClick(view: ImageView) {
         //preventing multiple clicks
-        button_answer1.isClickable = false
-        button_answer2.isClickable = false
-        button_answer3.isClickable = false
-        button_answer4.isClickable = false
+        image_answer1.isClickable = false
+        image_answer2.isClickable = false
+        image_answer3.isClickable = false
+        image_answer4.isClickable = false
 
-        if (mGameLogic.isCorrectCapital(view.text.toString())) {
+        if (mGameLogic.isCorrectFlag(view.contentDescription.toString())) {
             view.setBackgroundColor(ContextCompat.getColor(context!!, R.color.correct_answer))
         } else {
             view.setBackgroundColor(ContextCompat.getColor(context!!, R.color.incorrect_answer))
@@ -138,7 +165,11 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
                         )
                     )
                 } else {
-                    mParent.openFragment(newInstance(mGameLogic))
+                    mParent.openFragment(
+                        newInstance(
+                            mGameLogic
+                        )
+                    )
                 }
             }
         }

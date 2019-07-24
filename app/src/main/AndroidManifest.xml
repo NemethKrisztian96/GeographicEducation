@@ -19,20 +19,27 @@
         </receiver>-->
         <activity
                 android:name=".MainActivity"
-                android:label="Geo Ed">
+                android:label="Geo Ed"
+                android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".study.StudyActivity">
+        <activity
+                android:name=".study.StudyActivity"
+                android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".statistics.StatisticsActivity">
+        <activity
+                android:name=".statistics.StatisticsActivity"
+                android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".play.PlayActivity">
+        <activity
+                android:name=".play.PlayActivity"
+                android:screenOrientation="portrait">
         </activity>
     </application>
 

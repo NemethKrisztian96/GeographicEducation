@@ -2,7 +2,6 @@ package com.example.krs.geographiceducation.study
 
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -13,12 +12,11 @@ import com.example.krs.geographiceducation.common.NavigationHelpers
 import com.example.krs.geographiceducation.common.RegionListView
 import com.example.krs.geographiceducation.common.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
-import com.example.krs.geographiceducation.model.ExchangeRate
 import java.util.*
 
 class StudyActivity : AppCompatActivity() {
-    private lateinit var regionListView: ListView
-    private var mOpenFragments: MutableList<Fragment> = mutableListOf()
+    //private lateinit var regionListView: ListView
+    var mOpenFragments: MutableList<Fragment> = mutableListOf()
 
     companion object {
         private val TAG: String = "StudyActivity"
@@ -30,7 +28,7 @@ class StudyActivity : AppCompatActivity() {
             "https://www.countryflags.io/" //https://www.countryflags.io/:country_code/:style/:size.png
         const val EXCHANGE_BASE_URL =
             "https://api.exchangeratesapi.io/" //https://api.exchangeratesapi.io/latest?base=RON
-        var exchangeRate: ExchangeRate? = null
+        //var exchangeRate: ExchangeRate? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,15 +77,45 @@ class StudyActivity : AppCompatActivity() {
 
     private fun removeLastAddedFragment() {
         val fragment = mOpenFragments.last()
-        supportFragmentManager.beginTransaction()
-            .remove(fragment)
-            .commit()
-        mOpenFragments.remove(fragment)
+
+        if (fragment is CountryDetailsFragment) {
+            //check if there are duplicate references
+            var reused = false
+            mOpenFragments.forEach { frag: Fragment ->
+                if (!reused && frag is CountryDetailsFragment) {
+                    if (frag.mCountry == fragment.mCountry) {
+                        reused = true
+                    }
+                }
+            }
+
+            if (reused) {
+                //hide current
+                supportFragmentManager.beginTransaction()
+                    .hide(fragment)
+                    .commit()
+                //show previous
+                supportFragmentManager.beginTransaction()
+                    .show(mOpenFragments[mOpenFragments.size - 2])
+                    .commit()
+            } else {
+                supportFragmentManager.beginTransaction()
+                    .remove(fragment)
+                    .commit()
+            }
+        } else {
+            supportFragmentManager.beginTransaction()
+                .remove(fragment)
+                .commit()
+        }
+
+        //remove last
+        mOpenFragments.removeAt(mOpenFragments.size - 1)
     }
 
     private fun selectedRegionClick(view: TextView) {
         //open fragment and pass the selected region name
-        var fragment = CountryListFragment.newInstance(view.text.toString().toLowerCase())
+        val fragment = CountryListFragment.newInstance(view.text.toString().toLowerCase())
         supportFragmentManager.beginTransaction()
             .add(R.id.activity_study, fragment)
             .commit()
@@ -96,13 +124,36 @@ class StudyActivity : AppCompatActivity() {
     }
 
     fun openCountryDetailPage(country: Country) {
-        //open fragment and pass the selected region name
-        var fragment = CountryDetailsFragment.newInstance(country)
+        //reuse already opened fragment if it exists
+        var reused = false
+        var fragment: Fragment? = null
+        mOpenFragments.forEach { frag: Fragment ->
+            if (!reused && frag is CountryDetailsFragment) {
+                if (frag.mCountry == country) {
+                    reused = true
+                    fragment = frag
+                }
+            }
+        }
+
+        //hiding last fragment
         supportFragmentManager.beginTransaction()
-            .add(R.id.activity_study, fragment)
+            .hide(mOpenFragments.last())
             .commit()
 
-        mOpenFragments.add(fragment)
+        if (!reused) {
+            //open fragment and pass the selected region name
+            fragment = CountryDetailsFragment.newInstance(country)
+            supportFragmentManager.beginTransaction()
+                .add(R.id.activity_study, fragment!!)
+                .commit()
+        } else {
+            supportFragmentManager.beginTransaction()
+                .show(fragment!!)
+                .commit()
+        }
+
+        mOpenFragments.add(fragment!!)
     }
 
 }

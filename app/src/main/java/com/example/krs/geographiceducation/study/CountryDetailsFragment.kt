@@ -3,13 +3,9 @@ package com.example.krs.geographiceducation.study
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Spannable
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.TextView.BufferType
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -24,9 +20,9 @@ import kotlinx.android.synthetic.main.fragment_country_details.view.*
 
 
 class CountryDetailsFragment(country: Country) : Fragment() {
-    lateinit var mParent: StudyActivity
+    private lateinit var mParent: StudyActivity
 
-    private var mCountry = country
+    var mCountry = country
     private lateinit var recyclerView: RecyclerView
 
     companion object {
@@ -58,17 +54,39 @@ class CountryDetailsFragment(country: Country) : Fragment() {
         view.setBackgroundColor(ContextCompat.getColor(context!!, color.white))
         view.country_name.text = mCountry.mName
 
-        fillTextViewWithColoredText(view.country_alpha2code, string.alpha2code, mCountry.mAlpha2code)
-        fillTextViewWithColoredText(view.country_area, string.country_area, mCountry.mArea.toString())
-        fillTextViewWithColoredText(view.country_capital, string.country_capital, mCountry.mCapital)
-        fillTextViewWithColoredText(
+        UtilsAndHelpers.fillTextViewWithColoredText(
+            mParent,
+            view.country_alpha2code,
+            string.alpha2code,
+            mCountry.mAlpha2code
+        )
+        UtilsAndHelpers.fillTextViewWithColoredText(
+            mParent,
+            view.country_area,
+            string.country_area,
+            mCountry.mArea.toString()
+        )
+        UtilsAndHelpers.fillTextViewWithColoredText(
+            mParent,
+            view.country_capital,
+            string.country_capital,
+            mCountry.mCapital
+        )
+        UtilsAndHelpers.fillTextViewWithColoredText(
+            mParent,
             view.country_currency_exchange,
             string.country_currency_value,
             mCountry.mCurrencyValue
         )
-        fillTextViewWithColoredText(view.country_population, string.country_population, mCountry.mPopulation.toString())
-        //fillTextViewWithColoredText(view.country_local_time,string.country_local_time,mCountry.mLocalTime)
-        fillTextViewWithColoredText(
+        UtilsAndHelpers.fillTextViewWithColoredText(
+            mParent,
+            view.country_population,
+            string.country_population,
+            mCountry.mPopulation.toString()
+        )
+        //UtilsAndHelper.fillTextViewWithColoredText(mParent, view.country_local_time,string.country_local_time,mCountry.mLocalTime)
+        UtilsAndHelpers.fillTextViewWithColoredText(
+            mParent,
             view.country_local_time,
             string.country_local_time,
             mCountry.mCountryTimeZones.firstOrNull()!!
@@ -85,13 +103,13 @@ class CountryDetailsFragment(country: Country) : Fragment() {
         )
 
         //setting toolbar
-        var toolbar: Toolbar = view.findViewById(R.id.toolbar_local)
-        toolbar.navigationIcon = ContextCompat.getDrawable(mParent, R.drawable.ic_arrow_back_white)
+        val toolbar: Toolbar = view.findViewById(R.id.toolbar_local)
+        toolbar.navigationIcon = ContextCompat.getDrawable(mParent, drawable.ic_arrow_back_white)
         toolbar.title = StudyActivity.TOOLBAR_TITLE
         mParent.setSupportActionBar(toolbar)
 
         toolbar.setTitleTextColor(Color.WHITE)
-        toolbar.setNavigationOnClickListener { _ -> mParent.navigationOnClickListener() }
+        toolbar.setNavigationOnClickListener { mParent.navigationOnClickListener() }
 
         if (mCountry.mNeighbors.isNotEmpty()) {
             recyclerView = view.neighbors_recycler_view
@@ -110,19 +128,5 @@ class CountryDetailsFragment(country: Country) : Fragment() {
             view.country_neighbors_label.visibility = View.INVISIBLE
         }
         return view
-    }
-
-    /**
-     * Returns the string colored so that the important detail is highlighted
-     */
-    private fun fillTextViewWithColoredText(view: TextView, stringResourceId: Int, highlightedText: String) {
-        view.setText(getString(stringResourceId, highlightedText), BufferType.SPANNABLE)
-        val span = view.text as Spannable
-        span.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(context!!, color.design_default_color_primary)),
-            view.text.length - highlightedText.length,
-            view.text.length,
-            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-        )
     }
 }

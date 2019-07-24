@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:orientation="vertical"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+
+    <include
+            layout="@layout/toolbar_main"
+            android:id="@+id/toolbar_local"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/game_results"
+            android:id="@+id/game_result_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="100dp"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_local"
+            app:layout_constraintHorizontal_bias="0.25"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/game_type"
+            android:id="@+id/game_type_text_view"
+            android:layout_marginTop="50dp"
+            app:layout_constraintTop_toBottomOf="@+id/game_result_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            />
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/correct_answers"
+            android:id="@+id/correct_answers_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/game_type_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            />
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/game_duration"
+            android:id="@+id/game_duration_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/correct_answers_text_view"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/game_date"
+            android:id="@+id/game_date_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/game_duration_text_view"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

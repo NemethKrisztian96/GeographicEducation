@@ -1,4 +1,4 @@
-package com.example.krs.geographiceducation.logic.Retrofit
+package com.example.krs.geographiceducation.logic.retrofit
 
 import com.example.krs.geographiceducation.model.ExchangeRate
 import retrofit2.Call
