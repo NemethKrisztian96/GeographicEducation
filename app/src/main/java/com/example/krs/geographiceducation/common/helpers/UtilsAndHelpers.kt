@@ -35,18 +35,24 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-
+/**
+ * Class meant to offer all kinds of methods to facilitate different tasks
+ */
 class UtilsAndHelpers {
     companion object {
         const val TAG = "HELPER"
         private const val REST_COUNTRIES_BASE_URL = "https://restcountries.eu/rest/v2/"
         const val FLAG_BASE_URL =
             "https://www.countryflags.io/" //https://www.countryflags.io/:country_code/:style/:size.png
+
         var mExchangeRates: ExchangeRate? = null
 
         private const val SMALL_IMG_WIDTH = 64
         private const val BIG_IMG_WIDTH = 128
 
+        /**
+         * Loads image from the given url into the given view according to the given request options
+         */
         fun getImageWithGlide(context: Context, url: String, options: RequestOptions, view: ImageView) {
             Glide.with(context)
                 .load(url)
@@ -54,6 +60,9 @@ class UtilsAndHelpers {
                 .into(view)
         }
 
+        /**
+         * Gets request options containing a placeholder, an error image, and small image dimensions
+         */
         fun getGlideRequestOptionsForRecyclerViewItem(): RequestOptions {
             return RequestOptions()
                 .placeholder(R.drawable.flag_placeholder)
@@ -66,6 +75,9 @@ class UtilsAndHelpers {
                 .priority(Priority.HIGH)
         }
 
+        /**
+         * Gets request options containing a placeholder, an error image, and bigger image dimensions
+         */
         fun getGlideRequestOptionsForBiggerImg(): RequestOptions {
             return RequestOptions()
                 .placeholder(R.drawable.flag_placeholder)
@@ -172,11 +184,18 @@ class UtilsAndHelpers {
             })
         }
 
+        /**
+         * Returns the transformed currency using the downloaded exchange rates.
+         * The result is in a form like "1 EUR=4.78 RON"
+         */
         fun getTransformedCurrency(currency: CountryCurrency): String? {
             //transform to proper rate
             return mExchangeRates?.getExchangeRate(currency.mCode)
         }
 
+        /**
+         * Checks whether the device has an active internet connection or not
+         */
         fun hasActiveInternetConnection(context: Context): Boolean {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
@@ -202,6 +221,10 @@ class UtilsAndHelpers {
             )
         }
 
+        /**
+         * Gets the data from the RestCountries API for the given region into the countries list.
+         * Also take care of hiding loading progress bars in the given fragment, or displaying an error message
+         */
         fun getCountriesDataWithRetrofit(
             context: Context,
             regionName: String,
@@ -248,6 +271,9 @@ class UtilsAndHelpers {
             })
         }
 
+        /**
+         * Gets all the data from the RestCountries API.
+         */
         fun getAllCountriesDataWithRetrofit(context: Context, countries: MutableList<Country>) {
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
@@ -270,6 +296,9 @@ class UtilsAndHelpers {
             })
         }
 
+        /**
+         * Formats the given duration of milliseconds into a form like "mm:ss"
+         */
         fun transformGameDuration(gameDuration: Long): String {
             val minutes = TimeUnit.MILLISECONDS.toMinutes(gameDuration)
             val seconds = TimeUnit.MILLISECONDS.toSeconds(gameDuration)

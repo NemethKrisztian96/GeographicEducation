@@ -2,6 +2,9 @@ package com.example.krs.geographiceducation.model
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Data model object for describing the exchange rate of one particular currency
+ */
 class ExchangeRateItem(
     CAD: Double,
     HKD: Double,

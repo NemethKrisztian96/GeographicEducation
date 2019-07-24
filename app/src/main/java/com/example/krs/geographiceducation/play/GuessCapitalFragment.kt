@@ -25,7 +25,9 @@ import kotlinx.android.synthetic.main.fragment_guess_the_capital.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * Fragment responsible for the "Guess the capital" game
+ */
 class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
     private lateinit var mRegion: String
     private lateinit var mParent: PlayActivity
@@ -95,6 +97,9 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         return view
     }
 
+    /**
+     * Handles and classifies the given answer, opening the next question afterwards
+     */
     private fun answerButtonClick(view: Button) {
         //preventing multiple clicks
         button_answer1.isClickable = false
@@ -151,6 +156,10 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         mGameLogic.mNumberOfQuestions = numberOfQuestions
     }
 
+    /**
+     * Prompts the user to confirm the intention to leave the game and performs that when receives confirmation
+     */
+    @SuppressLint("SimpleDateFormat")
     private fun navigationOnClickListener() {
         //ask for confirmation
         AlertDialog.Builder(mParent)

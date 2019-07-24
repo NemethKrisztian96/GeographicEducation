@@ -5,6 +5,9 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+/**
+ * Retrofit service for getting the currencies from th ExchangeRates API
+ */
 interface RetrofitExchangeRateService {
 
     @GET("latest")

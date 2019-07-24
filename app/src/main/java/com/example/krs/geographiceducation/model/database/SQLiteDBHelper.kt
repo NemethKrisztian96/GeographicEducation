@@ -6,6 +6,9 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+/**
+ * Class that handles the app's SQLite database
+ */
 class SQLiteDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
     companion object {
@@ -34,11 +37,17 @@ class SQLiteDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         onCreate(sqLiteDatabase)
     }
 
+    /**
+     * Returns a cursor to all the records from the databases table
+     */
     fun getAllResults(): Cursor? {
         val db = this.readableDatabase
         return db.rawQuery("SELECT * FROM $RESULT_TABLE_NAME", null)
     }
 
+    /**
+     * Adds the parameter GameResult object to the databases table
+     */
     fun addResult(result: GameResult) {
         val values = ContentValues()
         values.put(RESULT_COLUMN_GAME_NAME, result.mGameName)

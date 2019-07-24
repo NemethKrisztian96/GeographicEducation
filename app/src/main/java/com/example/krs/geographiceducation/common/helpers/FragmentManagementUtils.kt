@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.krs.geographiceducation.study.StudyActivity
 
-
+/**
+ * Class meant to ease fragment management -- abandoned
+ */
 class FragmentManagementUtils {
     companion object {
         private const val BACK_STACK_ROOT_TAG = "root_fragment"

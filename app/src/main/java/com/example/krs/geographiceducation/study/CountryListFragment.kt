@@ -18,7 +18,9 @@ import com.example.krs.geographiceducation.model.Country
 import kotlinx.android.synthetic.main.fragment_country_list.view.*
 import org.apache.commons.lang3.StringUtils
 
-
+/**
+ * Fragment that displays a list (RecyclerView) with minimal details about Countries in a region
+ */
 class CountryListFragment(region: String) : Fragment() {
     private lateinit var mParent: StudyActivity
     private var mRegion = region

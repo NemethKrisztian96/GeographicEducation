@@ -26,6 +26,9 @@ import kotlinx.android.synthetic.main.fragment_guess_the_flag.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Fragment responsible for the "Guess the flag" game
+ */
 class GuessFlagFragment(gameLogic: GameLogic) : GuessGameFragment() {
     private lateinit var mRegion: String
     private lateinit var mParent: PlayActivity
@@ -122,6 +125,9 @@ class GuessFlagFragment(gameLogic: GameLogic) : GuessGameFragment() {
         return view
     }
 
+    /**
+     * Handles and classifies the given answer, opening the next question afterwards
+     */
     private fun answerImageClick(view: ImageView) {
         //preventing multiple clicks
         image_answer1.isClickable = false
@@ -182,6 +188,9 @@ class GuessFlagFragment(gameLogic: GameLogic) : GuessGameFragment() {
         mGameLogic.mNumberOfQuestions = numberOfQuestions
     }
 
+    /**
+     * Prompts the user to confirm the intention to leave the game and performs that when receives confirmation
+     */
     @SuppressLint("SimpleDateFormat")
     private fun navigationOnClickListener() {
         //ask for confirmation

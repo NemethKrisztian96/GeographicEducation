@@ -4,6 +4,9 @@ import android.app.Activity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
+/**
+ * Class meant to ease the usage of navigation bars by offering methods for navigation click listener and fragment removal -- partially used
+ */
 class NavigationHelpers {
     companion object {
         fun navigationOnClickListener(
