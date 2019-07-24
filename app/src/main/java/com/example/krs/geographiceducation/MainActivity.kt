@@ -3,11 +3,10 @@ package com.example.krs.geographiceducation
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.example.krs.geographiceducation.common.UtilsAndHelpers
+import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
 import com.example.krs.geographiceducation.play.PlayActivity
 import com.example.krs.geographiceducation.statistics.StatisticsActivity
@@ -34,20 +33,21 @@ class MainActivity : AppCompatActivity() {
             setContentView(R.layout.activity_main)
 
             //setting toolbar
-            var toolbar: Toolbar = findViewById(R.id.toolbar)
+            val toolbar: Toolbar = findViewById(R.id.toolbar)
             toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_home_white)
             toolbar.title = TOOLBAR_TITLE
             toolbar.setTitleTextColor(Color.WHITE)
             setSupportActionBar(toolbar)
 
+
             study_button.setOnClickListener {
-                studyButtonClick(it)
+                studyButtonClick()
             }
             play_button.setOnClickListener {
-                playButtonClick(it)
+                playButtonClick()
             }
             statistics_button.setOnClickListener {
-                statisticsButtonClick(it)
+                statisticsButtonClick()
             }
 
             UtilsAndHelpers.getAllCountriesDataWithRetrofit(this, allCountries)
@@ -60,21 +60,22 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
     }
 
-    fun studyButtonClick(view: View) {
+    private fun studyButtonClick() {
         //starting new activity
         val intent = Intent(this, StudyActivity::class.java)
         startActivity(intent)
     }
 
-    fun playButtonClick(view: View) {
+    private fun playButtonClick() {
         //starting new activity
         val intent = Intent(this, PlayActivity::class.java)
         startActivity(intent)
     }
 
-    fun statisticsButtonClick(view: View) {
+    private fun statisticsButtonClick() {
         //starting new activity
         val intent = Intent(this, StatisticsActivity::class.java)
         startActivity(intent)

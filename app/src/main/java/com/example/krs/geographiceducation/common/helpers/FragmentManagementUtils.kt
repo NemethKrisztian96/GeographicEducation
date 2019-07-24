@@ -1,4 +1,4 @@
-package com.example.krs.geographiceducation.common
+package com.example.krs.geographiceducation.common.helpers
 
 import android.app.Activity
 import androidx.fragment.app.Fragment
@@ -8,7 +8,7 @@ import com.example.krs.geographiceducation.study.StudyActivity
 
 class FragmentManagementUtils {
     companion object {
-        private val BACK_STACK_ROOT_TAG = "root_fragment"
+        private const val BACK_STACK_ROOT_TAG = "root_fragment"
 
         fun onTabSelected(activity: Activity, containerResourceId: Int, fragment: Fragment) {
             if (activity is StudyActivity) {

@@ -10,7 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.krs.geographiceducation.R
-import com.example.krs.geographiceducation.common.UtilsAndHelpers
+import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.database.GameResult
 import kotlinx.android.synthetic.main.fragment_game_result.view.*
 
@@ -50,7 +50,7 @@ class GameResultsFragment(gameResult: GameResult) : Fragment() {
             activity!!,
             view.correct_answers_text_view,
             R.string.correct_answers,
-            mGameResult.mCorrectAnswers.toString()
+            mGameResult.mCorrectAnswers
         )
         UtilsAndHelpers.fillTextViewWithColoredText(
             activity!!,

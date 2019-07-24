@@ -12,8 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.krs.geographiceducation.R
 import com.example.krs.geographiceducation.common.GuessGameFragment
-import com.example.krs.geographiceducation.common.NavigationHelpers
 import com.example.krs.geographiceducation.common.RegionListView
+import com.example.krs.geographiceducation.common.helpers.NavigationHelpers
 import com.example.krs.geographiceducation.logic.game.GameLogic
 import com.example.krs.geographiceducation.model.Country
 import kotlinx.android.synthetic.main.activity_play.*
@@ -99,11 +99,6 @@ class PlayActivity : AppCompatActivity() {
                 openFragment(fragment)
             }
         }
-
-        //starting loading progress bar
-        //loading_progress_bar.visibility = View.VISIBLE
-        //intro_text_view.visibility = View.GONE
-        //region_list_view1.visibility = View.GONE
     }
 
 

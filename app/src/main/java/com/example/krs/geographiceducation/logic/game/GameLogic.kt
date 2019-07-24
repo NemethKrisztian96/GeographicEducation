@@ -4,7 +4,7 @@ import com.example.krs.geographiceducation.model.Country
 import java.util.*
 
 class GameLogic(countries: List<Country>) {
-    var mCountries: List<Country> = countries
+    private var mCountries: List<Country> = countries
     lateinit var mCurrentCountry: Country
     var mNumberOfQuestions: Int = 15
     private var mPreviousCountries: MutableList<Country> = mutableListOf()
@@ -22,7 +22,6 @@ class GameLogic(countries: List<Country>) {
      */
     fun getGuessCapitalData(): List<String> {
         mCurrentCountry = getRandomNewCountry()
-        //mCurrentCountry.initializeMembersFromCountryList(mCountries)
         mPreviousCountries.add(mCurrentCountry)
 
         //building a list with possible answers
@@ -33,10 +32,7 @@ class GameLogic(countries: List<Country>) {
             answerOptions.add(HAS_NO_CAPITAL)
         }
         while (answerOptions.size < NUMBER_OF_ANSWER_OPTIONS) {
-            var wrongCapital = getWrongCapital()
-            //if (wrongCapital.length < 2) {
-            //    wrongCapital = HAS_NO_CAPITAL
-            //}
+            val wrongCapital = getWrongCapital()
             if (!answerOptions.contains(wrongCapital)) {
                 answerOptions.add(wrongCapital)
             }
@@ -92,16 +88,10 @@ class GameLogic(countries: List<Country>) {
 
         //building a list with possible answers
         val answerOptions = mutableListOf<String>()
-        //if (mCurrentCountry.mAlpha2code.length > 2) {
         answerOptions.add(mCurrentCountry.mAlpha2code)
-        //} else {
-        //    answerOptions.add(HAS_NO_CAPITAL)
-        //}
+
         while (answerOptions.size < NUMBER_OF_ANSWER_OPTIONS) {
             val wrongFlag = getWrongFlag()
-            //if (wrongCapital.length < 2) {
-            //    wrongCapital = HAS_NO_CAPITAL
-            //}
             if (!answerOptions.contains(wrongFlag)) {
                 answerOptions.add(wrongFlag)
             }
@@ -136,7 +126,7 @@ class GameLogic(countries: List<Country>) {
     }
 
     fun getGameDurationMilliseconds(): Long {
-        return (System.currentTimeMillis() - mStartTime)// / 1000
+        return (System.currentTimeMillis() - mStartTime)
     }
 
     /**
@@ -154,8 +144,12 @@ class GameLogic(countries: List<Country>) {
      * Returns whether the given answered neighbor is correct or not
      */
     fun isCorrectNeighbor(answer: String): Boolean {
+        if (answer == HAS_NO_NEIGHBOR && mCurrentCountry.mNeighbors.isNullOrEmpty()) {
+            mCorrectAnswers++
+            return true
+        }
         mCurrentCountry.mNeighbors.forEach {
-            if (it.mName == answer || (answer == HAS_NO_CAPITAL && it.mNeighbors.isNullOrEmpty())) {
+            if (it.mName == answer) {
                 mCorrectAnswers++
                 return true
             }
@@ -179,7 +173,6 @@ class GameLogic(countries: List<Country>) {
      * @return the generated Int
      */
     private fun generateRandomInRange(upperBound: Int): Int {
-        //return (lowerBound until upperBound).shuffled().first()
         return mRandom.nextInt(upperBound)
     }
 
@@ -200,7 +193,7 @@ class GameLogic(countries: List<Country>) {
      */
     private fun getWrongNeighbor(): String {
         val country = mCountries[generateRandomInRange(mCountries.size)]
-        return if (country != mCurrentCountry && mCurrentCountry.mNeighbors.contains(country)) {
+        return if (country == mCurrentCountry || mCurrentCountry.mNeighbors.contains(country)) {
             HAS_NO_NEIGHBOR
         } else {
             country.mName

@@ -9,12 +9,13 @@ import com.example.krs.geographiceducation.R
 
 class RegionListView {
     companion object {
-        val REGIONS: Array<String> = arrayOf("Africa", "Americas", "Asia", "Europe", "Oceania")
+        lateinit var regionListView: ListView
+        private val REGIONS: Array<String> = arrayOf("Africa", "Americas", "Asia", "Europe", "Oceania")
 
         fun bind(context: Activity, listViewId: Int, itemOnClickListener: (AdapterView<*>, View, Int, Long) -> Unit) {
             //creating and populating regionListView and it's adapter
-            val regionListView: ListView = context.findViewById(listViewId)
-            val regionAdapter = ArrayAdapter<String>(context, R.layout.region_list_item, REGIONS)
+            regionListView = context.findViewById(listViewId)
+            val regionAdapter = ArrayAdapter(context, R.layout.region_list_item, REGIONS)
 
             regionListView.adapter = regionAdapter
             regionListView.setOnItemClickListener(itemOnClickListener)

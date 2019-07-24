@@ -2,7 +2,7 @@ package com.example.krs.geographiceducation.model
 
 import android.annotation.SuppressLint
 import android.util.Log
-import com.example.krs.geographiceducation.common.UtilsAndHelpers
+import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.*
@@ -45,7 +45,7 @@ class Country(
     @SerializedName("currencies")
     var mCurrencies: Array<CountryCurrency> = currencies
 
-    var mLocalTime: String = getLocalTime(0)
+    private var mLocalTime: String = getLocalTime(0)
     var mNeighbors: List<Country> = listOf()
 
     var mCurrencyValue: String = "unavailable" // “1 EUR=4.78 RON”
@@ -69,7 +69,7 @@ class Country(
 
     @SuppressLint("SimpleDateFormat")
     private fun getLocalTime(position: Int): String {
-        var time = SimpleDateFormat("HH:mm:ss")
+        val time = SimpleDateFormat("HH:mm:ss")
         var index = position
         if (index < 0 && index >= mCountryTimeZones.size) {
             index = 0

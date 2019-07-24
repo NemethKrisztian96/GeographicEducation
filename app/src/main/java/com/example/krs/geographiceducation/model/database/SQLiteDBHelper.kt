@@ -22,10 +22,11 @@ class SQLiteDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     override fun onCreate(sqLiteDatabase: SQLiteDatabase) {
         sqLiteDatabase.execSQL(
-            "CREATE TABLE $RESULT_TABLE_NAME ($RESULT_COLUMN_GAME_NAME TEXT," +
-                    "$RESULT_COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, $RESULT_COLUMN_CORRECT_ANSWER INT, " +
+            "CREATE TABLE $RESULT_TABLE_NAME ($RESULT_COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "$RESULT_COLUMN_GAME_NAME TEXT, $RESULT_COLUMN_CORRECT_ANSWER TEXT, " +
                     "$RESULT_COLUMN_GAME_DURATION TEXT, $RESULT_COLUMN_GAME_DATE TEXT)"
         )
+        //insertDummyData()
     }
 
     override fun onUpgrade(sqLiteDatabase: SQLiteDatabase, i: Int, p2: Int) {
@@ -44,7 +45,18 @@ class SQLiteDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         values.put(RESULT_COLUMN_CORRECT_ANSWER, result.mCorrectAnswers)
         values.put(RESULT_COLUMN_GAME_DURATION, result.mGameDuration)
         values.put(RESULT_COLUMN_GAME_DATE, result.mGameDate)
-        val db = this.writableDatabase
+        val db = writableDatabase
+        db.insert(RESULT_TABLE_NAME, null, values)
+        db.close()
+    }
+
+    fun insertDummyData() {
+        val values = ContentValues()
+        values.put(RESULT_COLUMN_GAME_NAME, "Dummy game")
+        values.put(RESULT_COLUMN_CORRECT_ANSWER, "10/10")
+        values.put(RESULT_COLUMN_GAME_DURATION, "00:01")
+        values.put(RESULT_COLUMN_GAME_DATE, "2019-09-09 25:61")
+        val db = writableDatabase
         db.insert(RESULT_TABLE_NAME, null, values)
         db.close()
     }

@@ -8,15 +8,14 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.krs.geographiceducation.R
-import com.example.krs.geographiceducation.common.NavigationHelpers
 import com.example.krs.geographiceducation.common.RegionListView
-import com.example.krs.geographiceducation.common.UtilsAndHelpers
+import com.example.krs.geographiceducation.common.helpers.NavigationHelpers
+import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
 import java.util.*
 
 class StudyActivity : AppCompatActivity() {
-    //private lateinit var regionListView: ListView
-    var mOpenFragments: MutableList<Fragment> = mutableListOf()
+    private var mOpenFragments: MutableList<Fragment> = mutableListOf()
 
     companion object {
         private val TAG: String = "StudyActivity"
@@ -36,7 +35,7 @@ class StudyActivity : AppCompatActivity() {
         setContentView(R.layout.activity_study)
 
         //setting toolbar
-        var toolbar: Toolbar = findViewById(R.id.toolbar_local)
+        val toolbar: Toolbar = findViewById(R.id.toolbar_local)
         toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_white)
         toolbar.title = TOOLBAR_TITLE
         setSupportActionBar(toolbar)
@@ -65,7 +64,7 @@ class StudyActivity : AppCompatActivity() {
     }
 
     fun navigationOnClickListener() {
-        if (mOpenFragments.size > 1) {
+        if (mOpenFragments.size > 2) {
             //removing all fragments except the first (which should be CountryListFragment)
             for (i in 0 until mOpenFragments.size - 1) {
                 removeLastAddedFragment()
@@ -94,6 +93,7 @@ class StudyActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction()
                     .hide(fragment)
                     .commit()
+
                 //show previous
                 supportFragmentManager.beginTransaction()
                     .show(mOpenFragments[mOpenFragments.size - 2])
@@ -111,6 +111,11 @@ class StudyActivity : AppCompatActivity() {
 
         //remove last
         mOpenFragments.removeAt(mOpenFragments.size - 1)
+
+        //make RegionList clickable if it is on top
+        if (mOpenFragments.isNullOrEmpty()) {
+            RegionListView.regionListView.isEnabled = true
+        }
     }
 
     private fun selectedRegionClick(view: TextView) {
@@ -119,6 +124,8 @@ class StudyActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .add(R.id.activity_study, fragment)
             .commit()
+
+        RegionListView.regionListView.isEnabled = false
 
         mOpenFragments.add(fragment)
     }
@@ -140,6 +147,7 @@ class StudyActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .hide(mOpenFragments.last())
             .commit()
+        mOpenFragments.last()
 
         if (!reused) {
             //open fragment and pass the selected region name

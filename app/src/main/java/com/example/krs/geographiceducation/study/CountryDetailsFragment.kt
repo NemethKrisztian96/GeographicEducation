@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.krs.geographiceducation.R
 import com.example.krs.geographiceducation.R.*
 import com.example.krs.geographiceducation.common.CountryListAdapter
-import com.example.krs.geographiceducation.common.UtilsAndHelpers
+import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
 import kotlinx.android.synthetic.main.fragment_country_details.view.*
 

@@ -6,16 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.krs.geographiceducation.R
+import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
 import com.example.krs.geographiceducation.study.StudyActivity
 import kotlinx.android.synthetic.main.country_list_item.view.*
 
-
+/**
+ * An implementation of RecyclerView.Adapter meant for the listing minimal details about a country in a RecyclerView
+ */
 class CountryListAdapter(activity: Context, clickListener: (Country) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    val mActivity = activity
+    private val mActivity = activity
     var mCountries: MutableList<Country> = arrayListOf()
-    val mClickListener = clickListener
+    private val mClickListener = clickListener
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ViewHolder).bind(mActivity, mCountries[position], mClickListener)
@@ -23,7 +26,7 @@ class CountryListAdapter(activity: Context, clickListener: (Country) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemLayoutView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.country_list_item, null)
+            .inflate(R.layout.country_list_item, parent, false)
 
         return ViewHolder(itemLayoutView)
     }
@@ -37,7 +40,7 @@ class CountryListAdapter(activity: Context, clickListener: (Country) -> Unit) :
  * An implementation of RecyclerView.ViewHolder used to inflate the elements of the RecyclerView
  */
 class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val FLAG_SIZE = 64
+    private val FLAG_SIZE = 64
 
     fun bind(context: Context, country: Country, clickListener: (Country) -> Unit) {
         itemView.country_name.text = context.getString(
@@ -55,9 +58,5 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         )
 
         itemView.setOnClickListener { clickListener(country) }
-
-        //val tvCountryName: TextView = view.country_name
-        ////val tvCountryAlphaCode: TextView = view.country_alpha_code
-        //val ivCountryFlag: ImageView = view.country_flag
     }
 }

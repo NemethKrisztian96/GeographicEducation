@@ -1,4 +1,4 @@
-package com.example.krs.geographiceducation.common
+package com.example.krs.geographiceducation.common.helpers
 
 import android.app.Activity
 import android.content.Context
@@ -18,6 +18,8 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.example.krs.geographiceducation.MainActivity
 import com.example.krs.geographiceducation.R
+import com.example.krs.geographiceducation.common.CountryListAdapter
+import com.example.krs.geographiceducation.common.GuessGameFragment
 import com.example.krs.geographiceducation.logic.retrofit.RetrofitCountryService
 import com.example.krs.geographiceducation.logic.retrofit.RetrofitExchangeRateService
 import com.example.krs.geographiceducation.model.Country
@@ -40,9 +42,7 @@ class UtilsAndHelpers {
         private const val REST_COUNTRIES_BASE_URL = "https://restcountries.eu/rest/v2/"
         const val FLAG_BASE_URL =
             "https://www.countryflags.io/" //https://www.countryflags.io/:country_code/:style/:size.png
-        lateinit var countryListRecyclerViewAdapter: CountryListAdapter
-        var localCurrency: String? = null
-        var exchangeRates: ExchangeRate? = null
+        var mExchangeRates: ExchangeRate? = null
 
         private const val SMALL_IMG_WIDTH = 64
         private const val BIG_IMG_WIDTH = 128
@@ -79,20 +79,6 @@ class UtilsAndHelpers {
         }
 
         /**
-         * Gets the neighbors from the same region for the given country
-         * @param borders the neighboring countries alpha2code
-         * @return a list of Country neighbours
-         */
-        fun getNeighborsFromBorders(borders: Array<String>): List<Country> {
-            return countryListRecyclerViewAdapter.mCountries.filter { c ->
-                arrayContainsString(
-                    borders,
-                    c.mAlpha3code
-                )
-            }
-        }
-
-        /**
          * Gets the neighbors from the parameter country list for the given country
          * @param borders the neighboring countries alpha2code
          * @param countries the list of countries the neighbors will be selected from
@@ -100,7 +86,10 @@ class UtilsAndHelpers {
          */
         fun getNeighborsFromBorders(borders: Array<String>, countries: List<Country>): List<Country> {
             return countries.filter { c ->
-                arrayContainsString(borders, c.mAlpha3code)
+                arrayContainsString(
+                    borders,
+                    c.mAlpha3code
+                )
             }
         }
 
@@ -112,7 +101,10 @@ class UtilsAndHelpers {
         fun getAllExistingNeighborsFromBorders(borders: Array<String>): List<Country> {
             if (MainActivity.allCountries.size > 0) {
                 return MainActivity.allCountries.filter { c ->
-                    arrayContainsString(borders, c.mAlpha3code)
+                    arrayContainsString(
+                        borders,
+                        c.mAlpha3code
+                    )
                 }
             }
             return listOf()
@@ -161,7 +153,7 @@ class UtilsAndHelpers {
                                         val exchangeData = response.body()
                                         if (exchangeData != null) {
                                             //setting the exchangeRate
-                                            exchangeRates = exchangeData
+                                            mExchangeRates = exchangeData
                                         }
                                     }
 
@@ -182,7 +174,7 @@ class UtilsAndHelpers {
 
         fun getTransformedCurrency(currency: CountryCurrency): String? {
             //transform to proper rate
-            return exchangeRates?.getExchangeRate(currency.mCode)
+            return mExchangeRates?.getExchangeRate(currency.mCode)
         }
 
         fun hasActiveInternetConnection(context: Context): Boolean {
@@ -215,8 +207,6 @@ class UtilsAndHelpers {
             regionName: String,
             countries: MutableList<Country>,
             adapter: CountryListAdapter? = null,
-            //progressBar: ProgressBar? = null,
-            //errorImage: ImageView? = null
             fragment: Fragment? = null,
             activity: PlayActivity? = null
         ) {
@@ -283,8 +273,7 @@ class UtilsAndHelpers {
         fun transformGameDuration(gameDuration: Long): String {
             val minutes = TimeUnit.MILLISECONDS.toMinutes(gameDuration)
             val seconds = TimeUnit.MILLISECONDS.toSeconds(gameDuration)
-            return String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
-            //return "${minutes.toString(2)}:$seconds"
+            return String.format("%02d", minutes) + ":" + String.format("%02d", seconds - 60 * minutes)
         }
     }
 }

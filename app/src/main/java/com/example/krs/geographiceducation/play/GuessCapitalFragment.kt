@@ -14,7 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.example.krs.geographiceducation.R
 import com.example.krs.geographiceducation.common.GuessGameFragment
-import com.example.krs.geographiceducation.common.UtilsAndHelpers
+import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.logic.game.GameLogic
 import com.example.krs.geographiceducation.model.database.GameResult
 import com.example.krs.geographiceducation.model.database.SQLiteDBHelper
@@ -95,22 +95,6 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         return view
     }
 
-    override fun onDetach() {
-        super.onDetach()
-
-        //save result to db
-        if (mGameLogic.isLastQuestion()) {
-            SQLiteDBHelper(mParent, null).addResult(
-                GameResult(
-                    GAME_TYPE,
-                    mGameLogic.getCorrectAnswerCount(),
-                    UtilsAndHelpers.transformGameDuration(mGameLogic.getGameDurationMilliseconds()),
-                    SimpleDateFormat("yyyy-MM-dd ").format(Date())
-                )
-            )
-        }
-    }
-
     private fun answerButtonClick(view: Button) {
         //preventing multiple clicks
         button_answer1.isClickable = false
@@ -127,13 +111,22 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
             @SuppressLint("SimpleDateFormat")
             override fun run() {
                 if (mGameLogic.isLastQuestion()) {
+                    SQLiteDBHelper(mParent, null).addResult(
+                        GameResult(
+                            GAME_TYPE,
+                            "${mGameLogic.getCorrectAnswerCount()}/${mGameLogic.mNumberOfQuestions}",
+                            UtilsAndHelpers.transformGameDuration(mGameLogic.getGameDurationMilliseconds()),
+                            SimpleDateFormat("yyyy-MM-dd HH:mm").format(Date())
+                        )
+                    )
+
                     mParent.openFragment(
                         GameResultsFragment.newInstance(
                             GameResult(
                                 GAME_TYPE,
-                                mGameLogic.getCorrectAnswerCount(),
+                                "${mGameLogic.getCorrectAnswerCount()}/${mGameLogic.mNumberOfQuestions}",
                                 UtilsAndHelpers.transformGameDuration(mGameLogic.getGameDurationMilliseconds()),
-                                SimpleDateFormat("yyyy-MM-dd ").format(Date())
+                                SimpleDateFormat("yyyy-MM-dd HH:mm").format(Date())
                             )
                         )
                     )
@@ -169,9 +162,9 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
                 SQLiteDBHelper(mParent, null).addResult(
                     GameResult(
                         GAME_TYPE,
-                        mGameLogic.getCorrectAnswerCount(),
+                        "${mGameLogic.getCorrectAnswerCount()}/${mGameLogic.mNumberOfQuestions}",
                         UtilsAndHelpers.transformGameDuration(mGameLogic.getGameDurationMilliseconds()),
-                        SimpleDateFormat("yyyy-MM-dd ").format(Date())
+                        SimpleDateFormat("yyyy-MM-dd HH:mm").format(Date())
                     )
                 )
                 //go back to homepage
