@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.krs.geographiceducation.MainActivity
 import com.example.krs.geographiceducation.R
 import com.example.krs.geographiceducation.common.CountryListAdapter
 import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
@@ -52,12 +53,20 @@ class CountryListFragment(region: String) : Fragment() {
             mParent.openCountryDetailPage(country)
         }
 
-        //getDataWithRetrofit(adapter)
-        UtilsAndHelpers.getCountriesDataWithRetrofit(context!!, mRegion, adapter.mCountries, adapter, this)
-
         val view: View = inflater.inflate(R.layout.fragment_country_list, container, false)
         view.setBackgroundColor(ContextCompat.getColor(context!!, R.color.white))
         view.countries_in_region.text = getString(R.string.countries_in_region, StringUtils.capitalize(mRegion))
+
+        if (UtilsAndHelpers.dataSaverIsChecked) {
+            //filter data
+            adapter.mCountries = MainActivity.allCountries.filter {
+                it.mRegion == mRegion.capitalize()
+            }.toMutableList()
+        } else {
+            //getDataWithRetrofit(adapter)
+            UtilsAndHelpers.getCountriesDataWithRetrofit(context!!, mRegion, adapter.mCountries, adapter, this)
+            view.loading_progress_bar.visibility = View.VISIBLE
+        }
 
         //setting toolbar
         val toolbar: Toolbar = view.findViewById(R.id.toolbar_local)

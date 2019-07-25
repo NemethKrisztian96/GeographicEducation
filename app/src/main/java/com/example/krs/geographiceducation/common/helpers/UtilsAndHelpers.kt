@@ -8,6 +8,7 @@ import android.text.Spannable
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -27,7 +28,9 @@ import com.example.krs.geographiceducation.model.CountryCurrency
 import com.example.krs.geographiceducation.model.ExchangeRate
 import com.example.krs.geographiceducation.play.PlayActivity
 import com.example.krs.geographiceducation.study.StudyActivity
-import kotlinx.android.synthetic.main.fragment_country_list.*
+import kotlinx.android.synthetic.main.activity_play.*
+import kotlinx.android.synthetic.main.fragment_country_list.error_image
+import kotlinx.android.synthetic.main.fragment_country_list.loading_progress_bar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,8 +50,20 @@ class UtilsAndHelpers {
 
         var mExchangeRates: ExchangeRate? = null
 
+        /**
+         * Variable used to store the data saver switch's state
+         */
+        var dataSaverIsChecked: Boolean = false
+
         private const val SMALL_IMG_WIDTH = 64
         private const val BIG_IMG_WIDTH = 128
+
+        /**
+         * Method to handle data saver switch's change
+         */
+        fun dataSaverCheckedChange(buttonView: CompoundButton, isChecked: Boolean) {
+            dataSaverIsChecked = isChecked
+        }
 
         /**
          * Loads image from the given url into the given view according to the given request options
@@ -136,52 +151,54 @@ class UtilsAndHelpers {
          * @param countryCode the country's alpha3code
          */
         fun getExchangeRates(countryCode: String) {
-            //getting currencies used in country
-            val retrofit = Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(REST_COUNTRIES_BASE_URL)  //parent.REGION_URL + selected_region + parent.FILTER_FOR_REGION_URL
-                .build()
-            val service = retrofit.create(RetrofitCountryService::class.java)
-            val countryAssets = service.getCountriesAndCurrencies()
-            countryAssets.enqueue(object : Callback<List<Country>> {
-                override fun onResponse(call: Call<List<Country>>, response: Response<List<Country>>) {
-                    Log.i(TAG, "Call: success.")
-                    response.body()?.forEach { country ->
-                        if (country.mAlpha3code == countryCode) {
-                            country.mCurrencies.toList().forEach {
-                                //getting exchange rate for this currency
-                                val retrofit2 = Retrofit.Builder()
-                                    .addConverterFactory(GsonConverterFactory.create())
-                                    .baseUrl(StudyActivity.EXCHANGE_BASE_URL)  //parent.REGION_URL + selected_region + parent.FILTER_FOR_REGION_URL
-                                    .build()
-                                val service2 = retrofit2.create(RetrofitExchangeRateService::class.java)
-                                val exchangeAssets = service2.getExchangeRates(it.mCode)
-                                exchangeAssets.enqueue(object : Callback<ExchangeRate> {
-                                    override fun onResponse(
-                                        call: Call<ExchangeRate>,
-                                        response: Response<ExchangeRate>
-                                    ) {
-                                        Log.i(TAG, "Call: success.")
-                                        val exchangeData = response.body()
-                                        if (exchangeData != null) {
-                                            //setting the exchangeRate
-                                            mExchangeRates = exchangeData
+            if (mExchangeRates != null) {
+                //getting currencies used in country
+                val retrofit = Retrofit.Builder()
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .baseUrl(REST_COUNTRIES_BASE_URL)  //parent.REGION_URL + selected_region + parent.FILTER_FOR_REGION_URL
+                    .build()
+                val service = retrofit.create(RetrofitCountryService::class.java)
+                val countryAssets = service.getCountriesAndCurrencies()
+                countryAssets.enqueue(object : Callback<List<Country>> {
+                    override fun onResponse(call: Call<List<Country>>, response: Response<List<Country>>) {
+                        Log.i(TAG, "Call: success.")
+                        response.body()?.forEach { country ->
+                            if (country.mAlpha3code == countryCode) {
+                                country.mCurrencies.toList().forEach {
+                                    //getting exchange rate for this currency
+                                    val retrofit2 = Retrofit.Builder()
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .baseUrl(StudyActivity.EXCHANGE_BASE_URL)  //parent.REGION_URL + selected_region + parent.FILTER_FOR_REGION_URL
+                                        .build()
+                                    val service2 = retrofit2.create(RetrofitExchangeRateService::class.java)
+                                    val exchangeAssets = service2.getExchangeRates(it.mCode)
+                                    exchangeAssets.enqueue(object : Callback<ExchangeRate> {
+                                        override fun onResponse(
+                                            call: Call<ExchangeRate>,
+                                            response: Response<ExchangeRate>
+                                        ) {
+                                            Log.i(TAG, "Call: success.")
+                                            val exchangeData = response.body()
+                                            if (exchangeData != null) {
+                                                //setting the exchangeRate
+                                                mExchangeRates = exchangeData
+                                            }
                                         }
-                                    }
 
-                                    override fun onFailure(call: Call<ExchangeRate>, t: Throwable) {
-                                        Log.e(TAG, "Call: returned with failure. Could not find exchange rates.")
-                                    }
-                                })
+                                        override fun onFailure(call: Call<ExchangeRate>, t: Throwable) {
+                                            Log.e(TAG, "Call: returned with failure. Could not find exchange rates.")
+                                        }
+                                    })
+                                }
                             }
                         }
                     }
-                }
 
-                override fun onFailure(call: Call<List<Country>>, t: Throwable) {
-                    Log.e(TAG, "Call: returned with failure. Could not find country's currency.")
-                }
-            })
+                    override fun onFailure(call: Call<List<Country>>, t: Throwable) {
+                        Log.e(TAG, "Call: returned with failure. Could not find country's currency.")
+                    }
+                })
+            }
         }
 
         /**
@@ -224,6 +241,7 @@ class UtilsAndHelpers {
         /**
          * Gets the data from the RestCountries API for the given region into the countries list.
          * Also take care of hiding loading progress bars in the given fragment, or displaying an error message
+         * It is ugly... but it works well
          */
         fun getCountriesDataWithRetrofit(
             context: Context,
@@ -246,10 +264,14 @@ class UtilsAndHelpers {
                     if (countryAssetsData != null) {
                         countries.addAll(countryAssetsData)
                         adapter?.notifyDataSetChanged()
-                        if (fragment is GuessGameFragment) {
-                            activity?.showNumberOfQuestions(fragment)
-                        } else {
+
+                        if (activity is PlayActivity && fragment is GuessGameFragment) {
+                            activity.showNumberOfQuestions(fragment)
+                        }
+
+                        try {
                             fragment?.loading_progress_bar?.visibility = View.GONE
+                        } catch (ex: Exception) {
                         }
                         activity?.loading_progress_bar?.visibility = View.GONE
                     }
@@ -259,10 +281,13 @@ class UtilsAndHelpers {
                     Log.e(TAG, "Call: returned with failure.")
                     try {
                         fragment?.loading_progress_bar?.visibility = View.INVISIBLE
-
                         fragment?.error_image?.visibility = View.VISIBLE
                     } catch (ex: Exception) {
-
+                    }
+                    if (activity is PlayActivity && fragment is GuessGameFragment) {
+                        activity.switch_layout.visibility = View.GONE
+                        activity.intro_text_view.text = activity.getString(R.string.something_went_wrong)
+                        activity.region_list_view.visibility = View.GONE
                     }
                     activity?.loading_progress_bar?.visibility = View.INVISIBLE
                     activity?.error_image?.visibility = View.VISIBLE

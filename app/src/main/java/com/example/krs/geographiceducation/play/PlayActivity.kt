@@ -14,6 +14,7 @@ import com.example.krs.geographiceducation.R
 import com.example.krs.geographiceducation.common.GuessGameFragment
 import com.example.krs.geographiceducation.common.RegionListView
 import com.example.krs.geographiceducation.common.helpers.NavigationHelpers
+import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.logic.game.GameLogic
 import com.example.krs.geographiceducation.model.Country
 import kotlinx.android.synthetic.main.activity_play.*
@@ -36,6 +37,11 @@ class PlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
 
+        switch_button.isChecked = UtilsAndHelpers.dataSaverIsChecked
+        switch_button.setOnCheckedChangeListener { buttonView, isChecked ->
+            UtilsAndHelpers.dataSaverCheckedChange(buttonView, isChecked)
+        }
+
         //setting toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar_local)
         toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_white)
@@ -44,18 +50,22 @@ class PlayActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         toolbar.setNavigationOnClickListener {
+            switch_button.isClickable = true
             NavigationHelpers.navigationOnClickListener(this, mOpenFragments, supportFragmentManager)
         }
 
         button_guess_capital.setOnClickListener {
+            switch_button.isClickable = false
             showRegions(GuessCapitalFragment.newInstance(GameLogic(mCountries)))
         }
 
         button_guess_neighbor.setOnClickListener {
+            switch_button.isClickable = false
             showRegions(GuessNeighborFragment.newInstance(GameLogic(mCountries)))
         }
 
         button_guess_flag.setOnClickListener {
+            switch_button.isClickable = false
             showRegions(GuessFlagFragment.newInstance(GameLogic(mCountries)))
         }
     }
@@ -71,6 +81,10 @@ class PlayActivity : AppCompatActivity() {
                     fragment,
                     (view as TextView).text.toString().toLowerCase()
                 )
+                if (UtilsAndHelpers.dataSaverIsChecked) {
+                    showNumberOfQuestions(fragment)
+                }
+                //regionListView.visibility = View.GONE
             }
 
 
@@ -104,7 +118,11 @@ class PlayActivity : AppCompatActivity() {
         listView.setOnItemClickListener { _: AdapterView<*>, view: View, _: Int, _: Long ->
             if (view is TextView) {
                 fragment.setNumberOfQuestions(view.text.toString().toInt())
-                loading_progress_bar.visibility = View.VISIBLE
+                if (!UtilsAndHelpers.dataSaverIsChecked) {
+                    loading_progress_bar.visibility = View.VISIBLE
+                } else {
+                    loading_progress_bar.visibility = View.GONE
+                }
                 intro_text_view.visibility = View.GONE
                 regionListView.visibility = View.GONE
                 openFragment(fragment)
@@ -133,11 +151,17 @@ class PlayActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (button_guess_capital.visibility == View.GONE) {
-            finish()
-            startActivity(intent)
+        if (mOpenFragments.size > 0) {
+            if (mOpenFragments.last() is GuessGameFragment) {
+                (mOpenFragments.last() as GuessGameFragment).navigationOnClickListener()
+            }
         } else {
-            super.onBackPressed()
+            if (button_guess_capital.visibility == View.GONE) {
+                finish()
+                startActivity(intent)
+            } else {
+                super.onBackPressed()
+            }
         }
     }
 }

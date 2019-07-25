@@ -12,6 +12,7 @@ import java.util.*
  */
 class Country(
     name: String,
+    region: String,
     alpha2code: String,
     alpha3code: String,
     capital: String,
@@ -23,6 +24,9 @@ class Country(
 ) {
     @SerializedName("name")
     var mName: String = name
+
+    @SerializedName("region")
+    var mRegion: String = region
 
     @SerializedName("alpha2Code")
     var mAlpha2code: String = alpha2code

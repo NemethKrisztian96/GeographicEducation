@@ -12,6 +12,7 @@ import com.example.krs.geographiceducation.common.RegionListView
 import com.example.krs.geographiceducation.common.helpers.NavigationHelpers
 import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
+import kotlinx.android.synthetic.main.activity_study.*
 import java.util.*
 import kotlinx.android.synthetic.main.activity_study.region_list_view as regionListView
 
@@ -47,6 +48,11 @@ class StudyActivity : AppCompatActivity() {
         toolbar.setTitleTextColor(Color.WHITE)
         toolbar.setNavigationOnClickListener {
             NavigationHelpers.navigationOnClickListener(this, mOpenFragments, supportFragmentManager)
+        }
+
+        switch_button.isChecked = UtilsAndHelpers.dataSaverIsChecked
+        switch_button.setOnCheckedChangeListener { buttonView, isChecked ->
+            UtilsAndHelpers.dataSaverCheckedChange(buttonView, isChecked)
         }
 
         RegionListView.bind(

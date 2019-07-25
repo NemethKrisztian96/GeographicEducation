@@ -7,9 +7,10 @@ import java.util.*
  * Class that handles all the tasks required for the games
  */
 class GameLogic(countries: List<Country>) {
-    private var mCountries: List<Country> = countries
+    var mCountries: List<Country> = countries
     lateinit var mCurrentCountry: Country
     var mNumberOfQuestions: Int = 15
+
     private var mPreviousCountries: MutableList<Country> = mutableListOf()
     private val mRandom = Random()
     private var mStartTime: Long = 0
@@ -217,5 +218,9 @@ class GameLogic(countries: List<Country>) {
      */
     private fun getWrongFlag(): String {
         return mCountries[generateRandomInRange(mCountries.size)].mAlpha2code
+    }
+
+    fun areCountriesInitialized(): Boolean {
+        return mCountries.size > 1
     }
 }
