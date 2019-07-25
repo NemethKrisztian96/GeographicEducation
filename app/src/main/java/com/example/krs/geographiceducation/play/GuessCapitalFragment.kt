@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import com.example.krs.geographiceducation.MainActivity
 import com.example.krs.geographiceducation.R
 import com.example.krs.geographiceducation.common.GuessGameFragment
 import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
@@ -19,13 +19,14 @@ import com.example.krs.geographiceducation.logic.game.GameLogic
 import com.example.krs.geographiceducation.model.database.GameResult
 import com.example.krs.geographiceducation.model.database.SQLiteDBHelper
 import com.example.krs.geographiceducation.statistics.GameResultsFragment
-import com.example.krs.geographiceducation.study.StudyActivity
 import kotlinx.android.synthetic.main.fragment_guess_the_capital.*
 import kotlinx.android.synthetic.main.fragment_guess_the_capital.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * Fragment responsible for the "Guess the capital" game
+ */
 class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
     private lateinit var mRegion: String
     private lateinit var mParent: PlayActivity
@@ -58,14 +59,14 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         view.setBackgroundColor(ContextCompat.getColor(context!!, R.color.white))
 
         //setting toolbar
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar_local)
-        toolbar.navigationIcon =
+        mToolbar = view.findViewById(R.id.toolbar_local)
+        mToolbar.navigationIcon =
             ContextCompat.getDrawable(mParent, R.drawable.ic_arrow_back_white)
-        toolbar.title = StudyActivity.TOOLBAR_TITLE
-        mParent.setSupportActionBar(toolbar)
+        mToolbar.title = PlayActivity.TOOLBAR_TITLE
+        mParent.setSupportActionBar(mToolbar)
 
-        toolbar.setTitleTextColor(Color.WHITE)
-        toolbar.setNavigationOnClickListener { navigationOnClickListener() }
+        mToolbar.setTitleTextColor(Color.WHITE)
+        mToolbar.setNavigationOnClickListener { navigationOnClickListener() }
 
         val answerOptions = mGameLogic.getGuessCapitalData()
 
@@ -95,6 +96,9 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
         return view
     }
 
+    /**
+     * Handles and classifies the given answer, opening the next question afterwards
+     */
     private fun answerButtonClick(view: Button) {
         //preventing multiple clicks
         button_answer1.isClickable = false
@@ -144,14 +148,26 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
             mParent = parent
         }
         mRegion = regionName
-        UtilsAndHelpers.getCountriesDataWithRetrofit(mParent, mRegion, mParent.mCountries, null, this, mParent)
+
+        if (UtilsAndHelpers.dataSaverIsChecked) {
+            mParent.mCountries = MainActivity.allCountries.filter {
+                it.mRegion == mRegion.capitalize()
+            }.toMutableList()
+            mGameLogic.mCountries = mParent.mCountries
+        } else {
+            UtilsAndHelpers.getCountriesDataWithRetrofit(mParent, mRegion, mParent.mCountries, null, this, mParent)
+        }
     }
 
     override fun setNumberOfQuestions(numberOfQuestions: Int) {
         mGameLogic.mNumberOfQuestions = numberOfQuestions
     }
 
-    private fun navigationOnClickListener() {
+    /**
+     * Prompts the user to confirm the intention to leave the game and performs that when receives confirmation
+     */
+    @SuppressLint("SimpleDateFormat")
+    override fun navigationOnClickListener() {
         //ask for confirmation
         AlertDialog.Builder(mParent)
             .setTitle("Exit")
@@ -168,7 +184,8 @@ class GuessCapitalFragment(gameLogic: GameLogic) : GuessGameFragment() {
                     )
                 )
                 //go back to homepage
-                mParent.onBackPressed()
+                activity?.finish()
+                startActivity(activity?.intent)
             }
             .setNegativeButton(R.string.no, null)
             .show()

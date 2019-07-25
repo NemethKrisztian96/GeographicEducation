@@ -7,8 +7,12 @@ import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Data model object for describing a country
+ */
 class Country(
     name: String,
+    region: String,
     alpha2code: String,
     alpha3code: String,
     capital: String,
@@ -20,6 +24,9 @@ class Country(
 ) {
     @SerializedName("name")
     var mName: String = name
+
+    @SerializedName("region")
+    var mRegion: String = region
 
     @SerializedName("alpha2Code")
     var mAlpha2code: String = alpha2code
@@ -52,10 +59,10 @@ class Country(
 
     init {
         Log.i("Country", "Init")
-        initializeMembersFromExistingRecyclerViewAdapter()
+        initializeMembersFromAllTheCountriesList()
     }
 
-    fun initializeMembersFromExistingRecyclerViewAdapter() {
+    fun initializeMembersFromAllTheCountriesList() {
         mLocalTime = getLocalTime(0)
         mNeighbors = getNeighboursFromBordersList(mBorders)
         mCurrencyValue = getCurrencyFromCurrencyList(mCurrencies)

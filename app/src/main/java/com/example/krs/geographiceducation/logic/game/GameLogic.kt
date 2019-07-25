@@ -3,10 +3,14 @@ package com.example.krs.geographiceducation.logic.game
 import com.example.krs.geographiceducation.model.Country
 import java.util.*
 
+/**
+ * Class that handles all the tasks required for the games
+ */
 class GameLogic(countries: List<Country>) {
-    private var mCountries: List<Country> = countries
+    var mCountries: List<Country> = countries
     lateinit var mCurrentCountry: Country
     var mNumberOfQuestions: Int = 15
+
     private var mPreviousCountries: MutableList<Country> = mutableListOf()
     private val mRandom = Random()
     private var mStartTime: Long = 0
@@ -105,6 +109,9 @@ class GameLogic(countries: List<Country>) {
         return answerOptions.shuffled()
     }
 
+    /**
+     * Selects randomly a country that hasn't been used before in this game
+     */
     private fun getRandomNewCountry(): Country {
         //finding a country that hasn't been selected yet
         var index = generateRandomInRange(mCountries.size)
@@ -121,10 +128,16 @@ class GameLogic(countries: List<Country>) {
         return mNumberOfQuestions - mPreviousCountries.size == 0
     }
 
+    /**
+     * Returns the number of correctly answered question in the game
+     */
     fun getCorrectAnswerCount(): Int {
         return mCorrectAnswers
     }
 
+    /**
+     * Returns the game duration in milliseconds
+     */
     fun getGameDurationMilliseconds(): Long {
         return (System.currentTimeMillis() - mStartTime)
     }
@@ -205,5 +218,9 @@ class GameLogic(countries: List<Country>) {
      */
     private fun getWrongFlag(): String {
         return mCountries[generateRandomInRange(mCountries.size)].mAlpha2code
+    }
+
+    fun areCountriesInitialized(): Boolean {
+        return mCountries.size > 1
     }
 }

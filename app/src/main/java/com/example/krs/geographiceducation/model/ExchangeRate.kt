@@ -2,6 +2,9 @@ package com.example.krs.geographiceducation.model
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Data model object for describing the used exchange rates
+ */
 class ExchangeRate(rates: ExchangeRateItem, base: String) {
     @SerializedName("rates")
     var mRates: ExchangeRateItem = rates
@@ -9,6 +12,9 @@ class ExchangeRate(rates: ExchangeRateItem, base: String) {
     @SerializedName("base")
     var mBase: String = base
 
+    /**
+     * Return the exchange rates of the given currency code in a form like “1 EUR = 4.78 RON”
+     */
     fun getExchangeRate(currencyCode: String): String {
         when (currencyCode) {
             "CAD" -> {

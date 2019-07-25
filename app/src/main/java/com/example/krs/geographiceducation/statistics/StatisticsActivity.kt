@@ -15,6 +15,9 @@ import com.example.krs.geographiceducation.model.database.GameResult
 import com.example.krs.geographiceducation.model.database.SQLiteDBHelper
 import kotlinx.android.synthetic.main.activity_statistics.*
 
+/**
+ * Activity that is responsible of the "Statistics" functionality
+ */
 class StatisticsActivity : AppCompatActivity() {
     private lateinit var mRecyclerView: RecyclerView
 
@@ -63,6 +66,9 @@ class StatisticsActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Opens the given fragment
+     */
     private fun openGameResultFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .add(R.id.activity_statistics, fragment)
@@ -70,6 +76,9 @@ class StatisticsActivity : AppCompatActivity() {
         GameResultsListAdapter.isClickable = false
     }
 
+    /**
+     * Gets all data from the database and returns it as a list
+     */
     private fun getGameResultsFromDatabase(): List<GameResult> {
         val gameResults = mutableListOf<GameResult>()
         val dbHandler = SQLiteDBHelper(this, null)
@@ -100,7 +109,6 @@ class StatisticsActivity : AppCompatActivity() {
         } finally {
             cursor?.close()
         }
-
 
         return gameResults
     }

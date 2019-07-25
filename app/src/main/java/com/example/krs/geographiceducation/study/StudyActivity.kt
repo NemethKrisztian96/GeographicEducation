@@ -12,13 +12,18 @@ import com.example.krs.geographiceducation.common.RegionListView
 import com.example.krs.geographiceducation.common.helpers.NavigationHelpers
 import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
+import kotlinx.android.synthetic.main.activity_study.*
 import java.util.*
+import kotlinx.android.synthetic.main.activity_study.region_list_view as regionListView
 
+/**
+ * Activity that is responsible of the "Study" functionality
+ */
 class StudyActivity : AppCompatActivity() {
     private var mOpenFragments: MutableList<Fragment> = mutableListOf()
 
     companion object {
-        private val TAG: String = "StudyActivity"
+        private const val TAG: String = "StudyActivity"
         const val TOOLBAR_TITLE: String = "Study"
         const val BASE_URL = "https://restcountries.eu/rest/v2/"
         //const val REGION_URL = "https://restcountries.eu/rest/v2/region/" // + /region_name
@@ -45,9 +50,14 @@ class StudyActivity : AppCompatActivity() {
             NavigationHelpers.navigationOnClickListener(this, mOpenFragments, supportFragmentManager)
         }
 
+        switch_button.isChecked = UtilsAndHelpers.dataSaverIsChecked
+        switch_button.setOnCheckedChangeListener { buttonView, isChecked ->
+            UtilsAndHelpers.dataSaverCheckedChange(buttonView, isChecked)
+        }
+
         RegionListView.bind(
             this,
-            R.id.region_list_view
+            regionListView
         ) { parent, view, position, id -> selectedRegionClick(view as TextView) }
 
         //get exchange rates
@@ -63,6 +73,9 @@ class StudyActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Handles the clicks on the navigation button
+     */
     fun navigationOnClickListener() {
         if (mOpenFragments.size > 2) {
             //removing all fragments except the first (which should be CountryListFragment)
@@ -74,6 +87,9 @@ class StudyActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Removes last opened fragment for navigating back
+     */
     private fun removeLastAddedFragment() {
         val fragment = mOpenFragments.last()
 
@@ -114,10 +130,13 @@ class StudyActivity : AppCompatActivity() {
 
         //make RegionList clickable if it is on top
         if (mOpenFragments.isNullOrEmpty()) {
-            RegionListView.regionListView.isEnabled = true
+            regionListView.isEnabled = true
         }
     }
 
+    /**
+     * Opens the CountryListFragment for the region that has been clicked int the RegionListView
+     */
     private fun selectedRegionClick(view: TextView) {
         //open fragment and pass the selected region name
         val fragment = CountryListFragment.newInstance(view.text.toString().toLowerCase())
@@ -125,11 +144,14 @@ class StudyActivity : AppCompatActivity() {
             .add(R.id.activity_study, fragment)
             .commit()
 
-        RegionListView.regionListView.isEnabled = false
+        regionListView.isEnabled = false
 
         mOpenFragments.add(fragment)
     }
 
+    /**
+     * Opens a CountryDetailsFragment containing the data corresponding to the parameter Country
+     */
     fun openCountryDetailPage(country: Country) {
         //reuse already opened fragment if it exists
         var reused = false

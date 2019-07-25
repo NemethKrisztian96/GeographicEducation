@@ -18,7 +18,9 @@ import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.Country
 import kotlinx.android.synthetic.main.fragment_country_details.view.*
 
-
+/**
+ * Fragment that displays detailed information about a given Country
+ */
 class CountryDetailsFragment(country: Country) : Fragment() {
     private lateinit var mParent: StudyActivity
 
@@ -30,7 +32,7 @@ class CountryDetailsFragment(country: Country) : Fragment() {
         const val FLAG_SIZE = 64 //this is the max size
 
         fun newInstance(country: Country): CountryDetailsFragment {
-            country.initializeMembersFromExistingRecyclerViewAdapter()
+            country.initializeMembersFromAllTheCountriesList()
             return CountryDetailsFragment(country)
         }
     }

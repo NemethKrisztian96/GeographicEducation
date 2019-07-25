@@ -40,4 +40,6 @@
     <string name="game_type_string">%s</string>
     <string name="there_are_no_records">There are no records</string>
     <string name="well_done_icon">Well done icon</string>
+    <string name="data_saver">Data saver</string>
+    <string name="something_went_wrong">Something went wrong...</string>
 </resources>

@@ -14,6 +14,9 @@ import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.model.database.GameResult
 import kotlinx.android.synthetic.main.fragment_game_result.view.*
 
+/**
+ * Fragment that displays the results of a game
+ */
 class GameResultsFragment(gameResult: GameResult) : Fragment() {
     private val mGameResult = gameResult
 

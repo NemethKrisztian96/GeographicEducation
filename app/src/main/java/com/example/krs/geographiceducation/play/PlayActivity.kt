@@ -14,11 +14,15 @@ import com.example.krs.geographiceducation.R
 import com.example.krs.geographiceducation.common.GuessGameFragment
 import com.example.krs.geographiceducation.common.RegionListView
 import com.example.krs.geographiceducation.common.helpers.NavigationHelpers
+import com.example.krs.geographiceducation.common.helpers.UtilsAndHelpers
 import com.example.krs.geographiceducation.logic.game.GameLogic
 import com.example.krs.geographiceducation.model.Country
 import kotlinx.android.synthetic.main.activity_play.*
-import kotlinx.android.synthetic.main.activity_play.region_list_view as region_list_view1
+import kotlinx.android.synthetic.main.activity_play.region_list_view as regionListView
 
+/**
+ * Activity that is responsible of the "Play" functionality
+ */
 class PlayActivity : AppCompatActivity() {
     companion object {
         const val TOOLBAR_TITLE: String = "Play"
@@ -33,6 +37,11 @@ class PlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
 
+        switch_button.isChecked = UtilsAndHelpers.dataSaverIsChecked
+        switch_button.setOnCheckedChangeListener { buttonView, isChecked ->
+            UtilsAndHelpers.dataSaverCheckedChange(buttonView, isChecked)
+        }
+
         //setting toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar_local)
         toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_white)
@@ -41,22 +50,30 @@ class PlayActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         toolbar.setNavigationOnClickListener {
+            switch_button.isClickable = true
             NavigationHelpers.navigationOnClickListener(this, mOpenFragments, supportFragmentManager)
         }
 
         button_guess_capital.setOnClickListener {
+            switch_button.isClickable = false
             showRegions(GuessCapitalFragment.newInstance(GameLogic(mCountries)))
         }
 
         button_guess_neighbor.setOnClickListener {
+            switch_button.isClickable = false
             showRegions(GuessNeighborFragment.newInstance(GameLogic(mCountries)))
         }
 
         button_guess_flag.setOnClickListener {
+            switch_button.isClickable = false
             showRegions(GuessFlagFragment.newInstance(GameLogic(mCountries)))
         }
     }
 
+    /**
+     * Shows the ListView containing the regions and handles what is selected out of it.
+     * @param fragment a game type fragment that will be passed forward for further operations.
+     */
     private fun showRegions(fragment: GuessGameFragment) {
         val clickListener: (AdapterView<*>, View, Int, Long) -> Unit =
             { _: AdapterView<*>, view: View, _: Int, _: Long ->
@@ -64,44 +81,58 @@ class PlayActivity : AppCompatActivity() {
                     fragment,
                     (view as TextView).text.toString().toLowerCase()
                 )
+                if (UtilsAndHelpers.dataSaverIsChecked) {
+                    showNumberOfQuestions(fragment)
+                }
+                //regionListView.visibility = View.GONE
             }
 
 
-        RegionListView.bind(this, R.id.region_list_view, clickListener)
+        RegionListView.bind(this, regionListView, clickListener)
 
         button_guess_capital.visibility = View.GONE
         button_guess_neighbor.visibility = View.GONE
         button_guess_flag.visibility = View.GONE
         intro_text_view.text = getString(R.string.string_please_select_a_region)
-        region_list_view1.visibility = View.VISIBLE
+        regionListView.visibility = View.VISIBLE
     }
 
+    /**
+     * Sets the region name to the given fragment
+     */
     private fun setRegionToFragment(fragment: GuessGameFragment, regionName: String) {
         fragment.setRegion(regionName, this)
         mNextFragment = fragment
-
-        //showNumberOfQuestions(fragment)
-
     }
 
+    /**
+     * Shows the ListView containing the possible number of questions and handles what is selected out of it.
+     * @param fragment a game type fragment that will be opened
+     */
     fun showNumberOfQuestions(fragment: GuessGameFragment) {
         intro_text_view.text = getString(R.string.string_please_select_the_number_of_questions)
-        val listView = region_list_view1
+        val listView = regionListView
         val adapter = ArrayAdapter(this, R.layout.region_list_item, mutableListOf("5", "10", "15"))
 
         listView.adapter = adapter
         listView.setOnItemClickListener { _: AdapterView<*>, view: View, _: Int, _: Long ->
             if (view is TextView) {
                 fragment.setNumberOfQuestions(view.text.toString().toInt())
-                loading_progress_bar.visibility = View.VISIBLE
+                if (!UtilsAndHelpers.dataSaverIsChecked) {
+                    loading_progress_bar.visibility = View.VISIBLE
+                } else {
+                    loading_progress_bar.visibility = View.GONE
+                }
                 intro_text_view.visibility = View.GONE
-                region_list_view1.visibility = View.GONE
+                regionListView.visibility = View.GONE
                 openFragment(fragment)
             }
         }
     }
 
-
+    /**
+     * Opens a fragment and removes the previously opened fragment
+     */
     fun openFragment(fragment: Fragment) {
         //open fragment
         supportFragmentManager.beginTransaction()
@@ -120,11 +151,17 @@ class PlayActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (button_guess_capital.visibility == View.GONE) {
-            finish()
-            startActivity(intent)
+        if (mOpenFragments.size > 0) {
+            if (mOpenFragments.last() is GuessGameFragment) {
+                (mOpenFragments.last() as GuessGameFragment).navigationOnClickListener()
+            }
         } else {
-            super.onBackPressed()
+            if (button_guess_capital.visibility == View.GONE) {
+                finish()
+                startActivity(intent)
+            } else {
+                super.onBackPressed()
+            }
         }
     }
 }
