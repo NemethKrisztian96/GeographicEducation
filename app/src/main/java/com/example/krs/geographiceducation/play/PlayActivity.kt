@@ -151,10 +151,8 @@ class PlayActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (mOpenFragments.size > 0) {
-            if (mOpenFragments.last() is GuessGameFragment) {
-                (mOpenFragments.last() as GuessGameFragment).navigationOnClickListener()
-            }
+        if (mOpenFragments.size > 0 && mOpenFragments.last() is GuessGameFragment) {
+            (mOpenFragments.last() as GuessGameFragment).navigationOnClickListener()
         } else {
             if (button_guess_capital.visibility == View.GONE) {
                 finish()
